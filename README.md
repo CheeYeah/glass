@@ -91,6 +91,15 @@ npm run setup
 
 `Ctrl/Cmd + Arrows` : move main window position
 
+## Internationalization Support
+
+Glass supports multiple languages through i18next. Currently available languages:
+
+- English
+- Chinese (Simplified)
+
+To contribute a new language translation, please refer to the translation files in `src/locales/` directory.
+
 ## Repo Activity
 
 ![Alt](https://repobeats.axiom.co/api/embed/a23e342faafa84fa8797fa57762885d82fac1180.svg "Repobeats analytics image")

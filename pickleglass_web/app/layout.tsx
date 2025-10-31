@@ -1,8 +1,7 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
 import ClientLayout from '@/components/ClientLayout'
 
-const inter = Inter({ subsets: ['latin'] })
+// 临时禁用字体优化以解决网络问题
 
 export const metadata = {
   title: 'pickleglass - AI Assistant',
@@ -16,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <ClientLayout>
           {children}
         </ClientLayout>

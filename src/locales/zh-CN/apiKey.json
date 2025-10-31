@@ -1,0 +1,16 @@
+{
+  "back": "返回",
+  "usePersonalApiKeys": "使用个人API密钥",
+  "selectLlmProvider": "1. 选择LLM提供商",
+  "enterApiKey": "2. 输入API密钥",
+  "enterYourApiKey": "输入您的{{provider}} API密钥",
+  "selectSttProvider": "3. 选择STT提供商",
+  "enterSttApiKey": "4. 输入STT API密钥",
+  "sttNotSupportedByOllama": "Ollama不支持STT",
+  "selectModel": "选择模型...",
+  "enterYourSttApiKey": "输入您的STT API密钥",
+  "settingUp": "正在设置...",
+  "installingModel": "正在安装{{model}}...",
+  "downloading": "正在下载...",
+  "getApiKeyFrom": "从以下获取API密钥：OpenAI | Google | Anthropic"
+}

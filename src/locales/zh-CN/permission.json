@@ -1,0 +1,18 @@
+{
+  "setupRequired": "权限设置要求",
+  "grantAccess": "授予麦克风、屏幕录制",
+  "andKeychain": "和密钥链",
+  "toContinue": "的访问权限以继续",
+  "microphone": "麦克风",
+  "screen": "屏幕",
+  "screenRecording": "屏幕录制",
+  "dataEncryption": "数据加密",
+  "microphoneAccessGranted": "麦克风访问已授予",
+  "grantMicrophoneAccess": "授予麦克风访问权限",
+  "screenRecordingGranted": "屏幕录制已授予",
+  "grantScreenRecordingAccess": "授予屏幕录制访问权限",
+  "encryptionEnabled": "加密已启用",
+  "enableEncryption": "启用加密",
+  "keychainDescription": "存储用于加密数据的密钥。按\"<b>始终允许</b>\"以继续。",
+  "continueToGlass": "继续到Pickle Glass"
+}

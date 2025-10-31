@@ -1,6 +1,8 @@
 import { html, css, LitElement } from '../../assets/lit-core-2.7.4.min.js';
+import { t } from '../../../utils/useTranslation.js';
+import { i18nLitMixin } from '../../../utils/i18nLitMixin.js';
 
-export class SttView extends LitElement {
+export class SttView extends i18nLitMixin(LitElement) {
     static styles = css`
         :host {
             display: block;
@@ -211,7 +213,7 @@ export class SttView extends LitElement {
         return html`
             <div class="transcription-container">
                 ${this.sttMessages.length === 0
-                    ? html`<div class="empty-state">Waiting for speech...</div>`
+                    ? html`<div class="empty-state">${t('stt.waitingForSpeech')}</div>`
                     : this.sttMessages.map(msg => html`
                         <div class="stt-message ${this.getSpeakerClass(msg.speaker)}">
                             ${msg.text}
@@ -223,4 +225,4 @@ export class SttView extends LitElement {
     }
 }
 
-customElements.define('stt-view', SttView); 
+customElements.define('stt-view', SttView);

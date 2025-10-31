@@ -203,9 +203,31 @@ app.whenReady().then(async () => {
         setupWebDataHandlers();
 
         // Initialize Ollama models in database
-        await ollamaModelRepository.initializeDefaultModels();
+    await ollamaModelRepository.initializeDefaultModels();
 
-        // Auto warm-up selected Ollama model in background (non-blocking)
+    // Initialize i18n
+    const { initializeI18n } = require('./utils/initI18n');
+    const { i18nEventEmitter } = require('./utils/i18nextConfig');
+    
+    try {
+      await initializeI18n();
+      console.log('i18n initialized successfully');
+      
+      // Listen for language change events
+      i18nEventEmitter.on('languageChanged', () => {
+        console.log('Language changed event detected');
+        // Broadcast language change to all windows
+        BrowserWindow.getAllWindows().forEach(win => {
+          if (!win.isDestroyed()) {
+            win.webContents.send('language-changed');
+          }
+        });
+      });
+    } catch (error) {
+      console.error('Failed to initialize i18n:', error);
+    }
+
+    // Auto warm-up selected Ollama model in background (non-blocking)
         setTimeout(async () => {
             try {
                 console.log('[index.js] Starting background Ollama model warm-up...');

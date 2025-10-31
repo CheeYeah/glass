@@ -1,0 +1,9 @@
+{
+  "chooseConnection": "Choose how to connect your AI model",
+  "quickStart": "Quick start with default API key",
+  "quickStartDescription": "100% free with Pickle's OpenAI key<br/>No personal data collected<br/>Sign up with Google in seconds",
+  "openBrowserLogin": "Open Browser to Log in",
+  "personalApiKeys": "Use Personal API keys",
+  "personalApiKeysDescription": "Costs may apply based on your API usage<br/>No personal data collected<br/>Use your own API keys (OpenAI, Gemini, etc.)",
+  "enterApiKey": "Enter Your API Key"
+}

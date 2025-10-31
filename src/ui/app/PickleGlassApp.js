@@ -3,10 +3,12 @@ import { SettingsView } from '../settings/SettingsView.js';
 import { ListenView } from '../listen/ListenView.js';
 import { AskView } from '../ask/AskView.js';
 import { ShortcutSettingsView } from '../settings/ShortCutSettingsView.js';
+import { t } from '../utils/useTranslation.js';
+import { i18nLitMixin } from '../utils/i18nLitMixin.js';
 
 import '../listen/audioCore/renderer.js';
 
-export class PickleGlassApp extends LitElement {
+export class PickleGlassApp extends i18nLitMixin(LitElement) {
     static styles = css`
         :host {
             display: block;
@@ -153,7 +155,7 @@ export class PickleGlassApp extends LitElement {
             case 'setup':
                 return html`<setup-view></setup-view>`;
             default:
-                return html`<div>Unknown view: ${this.currentView}</div>`;
+                return html`<div>${t('common.unknownView')}: ${this.currentView}</div>`;
         }
     }
 }

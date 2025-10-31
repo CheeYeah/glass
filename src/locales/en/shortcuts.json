@@ -1,0 +1,18 @@
+{
+  "title": "Edit Shortcuts",
+  "loading": "Loading Shortcuts...",
+  "resetToDefault": "Reset to Default",
+  "disable": "Disable",
+  "shortcutSet": "Shortcut set",
+  "shortcutDisabled": "Shortcut disabled",
+  "invalidShortcut": "Invalid shortcut: needs a modifier",
+  "invalidShortcutMaxKeys": "Invalid shortcut: max 4 keys",
+  "invalidShortcutSystemReserved": "Invalid shortcut: system reserved",
+  "pressNewShortcut": "Press new shortcut…",
+  "clickToEdit": "Click to edit",
+  "resetConfirmation": "Are you sure you want to reset all shortcuts to their default values?",
+  "failedToSave": "Failed to save shortcuts: ",
+  "failedToLoadDefaults": "Failed to load default settings.",
+  "scrollUp": "Scroll Up Response",
+  "scrollDown": "Scroll Down Response"
+}

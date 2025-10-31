@@ -1,0 +1,16 @@
+{
+  "back": "Back",
+  "usePersonalApiKeys": "Use Personal API keys",
+  "selectLlmProvider": "1. Select LLM Provider",
+  "enterApiKey": "2. Enter API Key",
+  "enterYourApiKey": "Enter your {{provider}} API key",
+  "selectSttProvider": "3. Select STT Provider",
+  "enterSttApiKey": "4. Enter STT API Key",
+  "sttNotSupportedByOllama": "STT not supported by Ollama",
+  "selectModel": "Select a model...",
+  "enterYourSttApiKey": "Enter your STT API key",
+  "settingUp": "Setting up...",
+  "installingModel": "Installing {{model}}...",
+  "downloading": "Downloading...",
+  "getApiKeyFrom": "Get your API key from: OpenAI | Google | Anthropic"
+}

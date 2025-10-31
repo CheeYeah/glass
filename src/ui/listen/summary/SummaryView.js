@@ -1,6 +1,8 @@
 import { html, css, LitElement } from '../../assets/lit-core-2.7.4.min.js';
+import { t } from '../../../utils/useTranslation.js';
+import { i18nLitMixin } from '../../../utils/i18nLitMixin.js';
 
-export class SummaryView extends LitElement {
+export class SummaryView extends i18nLitMixin(LitElement) {
     static styles = css`
         :host {
             display: block;
@@ -465,7 +467,7 @@ export class SummaryView extends LitElement {
         return html`
             <div class="insights-container">
                 ${!hasAnyContent
-                    ? html`<div class="empty-state">No insights yet...</div>`
+                    ? html`<div class="empty-state">${t('summary.noInsights')}</div>`
                     : html`
                         <insights-title>Current Summary</insights-title>
                         ${data.summary.length > 0
@@ -483,7 +485,7 @@ export class SummaryView extends LitElement {
                                           </div>
                                       `
                                   )
-                            : html` <div class="request-item">No content yet...</div> `}
+                            : html` <div class="request-item">${t('summary.noContent')}</div> `}
                         ${data.topic.header
                             ? html`
                                   <insights-title>${data.topic.header}</insights-title>
@@ -545,4 +547,4 @@ export class SummaryView extends LitElement {
     }
 }
 
-customElements.define('summary-view', SummaryView); 
+customElements.define('summary-view', SummaryView);
