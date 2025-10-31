@@ -1,5 +1,5 @@
 import { html, css, LitElement } from '../assets/lit-core-2.7.4.min.js';
-import { i18n } from '../../utils/i18n.js';
+import { t } from '../../utils/useTranslation.js';
 
 export class WelcomeHeader extends LitElement {
     static styles = css`
@@ -189,38 +189,38 @@ export class WelcomeHeader extends LitElement {
             <div class="container">
                 <button class="close-button" @click=${this.handleClose}>×</button>
                 <div class="header-section">
-                    <div class="title">${i18n.t('app.title')}</div>
-                    <div class="subtitle">${i18n.t('welcome.chooseConnection')}</div>
+                    <div class="title">${t('app.title')}</div>
+                    <div class="subtitle">${t('welcome.chooseConnection')}</div>
                 </div>
                 <div class="option-card">
                     <div class="divider"></div>
                     <div class="option-content">
-                        <div class="option-title">${i18n.t('welcome.quickStart')}</div>
-                        <div class="option-description">
-                            ${i18n.t('welcome.quickStartDescription')}
-                        </div>
+                        <div class="option-title">${t('welcome.quickStart')}</div>
+            <div class="option-description">
+                ${t('welcome.quickStartDescription')}
+            </div>
                     </div>
                     <button class="action-button" @click=${this.loginCallback}>
-                        <div class="button-text">${i18n.t('welcome.openBrowserLogin')}</div>
+                        <div class="button-text">${t('welcome.openBrowserLogin')}</div>
                         <div class="button-icon"><div class="arrow-icon"></div></div>
                     </button>
                 </div>
                 <div class="option-card">
                     <div class="divider"></div>
                     <div class="option-content">
-                        <div class="option-title">${i18n.t('welcome.personalApiKeys')}</div>
-                        <div class="option-description">
-                            ${i18n.t('welcome.personalApiKeysDescription')}
-                        </div>
+                        <div class="option-title">${t('welcome.personalApiKeys')}</div>
+            <div class="option-description">
+                ${t('welcome.personalApiKeysDescription')}
+            </div>
                     </div>
                     <button class="action-button" @click=${this.apiKeyCallback}>
-                        <div class="button-text">${i18n.t('welcome.enterApiKey')}</div>
+                        <div class="button-text">${t('welcome.enterApiKey')}</div>
                         <div class="button-icon"><div class="arrow-icon"></div></div>
                     </button>
                 </div>
                 <div class="footer">
-                    ${i18n.t('welcome.privacyNotice')}
-                    <span class="footer-link" @click=${this.openPrivacyPolicy}>${i18n.t('welcome.seeDetails')}</span>
+                    ${t('welcome.privacyNotice')}
+                    <span class="footer-link" @click=${this.openPrivacyPolicy}>${t('welcome.seeDetails')}</span>
                 </div>
             </div>
         `;

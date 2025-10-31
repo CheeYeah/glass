@@ -1,4 +1,5 @@
 import { html, css, LitElement } from '../../assets/lit-core-2.7.4.min.js';
+import { i18n } from '../../../utils/i18n.js';
 
 export class SummaryView extends LitElement {
     static styles = css`
@@ -465,7 +466,7 @@ export class SummaryView extends LitElement {
         return html`
             <div class="insights-container">
                 ${!hasAnyContent
-                    ? html`<div class="empty-state">No insights yet...</div>`
+                    ? html`<div class="empty-state">${t('summary.noInsights')}</div>`
                     : html`
                         <insights-title>Current Summary</insights-title>
                         ${data.summary.length > 0
@@ -483,7 +484,7 @@ export class SummaryView extends LitElement {
                                           </div>
                                       `
                                   )
-                            : html` <div class="request-item">No content yet...</div> `}
+                            : html` <div class="request-item">${t('summary.noContent')}</div> `}
                         ${data.topic.header
                             ? html`
                                   <insights-title>${data.topic.header}</insights-title>
@@ -545,4 +546,4 @@ export class SummaryView extends LitElement {
     }
 }
 
-customElements.define('summary-view', SummaryView); 
+customElements.define('summary-view', SummaryView);

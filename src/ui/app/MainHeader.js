@@ -1,6 +1,5 @@
 import { html, css, LitElement } from '../assets/lit-core-2.7.4.min.js';
-import { i18n } from '../../utils/i18n.js';
-import { i18n } from '../../utils/i18n.js';
+// // // // import { t } from '../../utils/useTranslation.js';
 
 export class MainHeader extends LitElement {
     static properties = {
@@ -361,10 +360,10 @@ export class MainHeader extends LitElement {
 
     _getListenButtonText(status) {
         switch (status) {
-            case 'beforeSession': return i18n.t('header.listen');
-            case 'inSession'   : return i18n.t('header.stop');
-            case 'afterSession': return i18n.t('header.done');
-            default            : return i18n.t('header.listen');
+            case 'beforeSession': return t('header.listen');
+            case 'inSession'   : return t('header.stop');
+            case 'afterSession': return t('header.done');
+            default            : return t('header.listen');
         }
     }
 
@@ -646,7 +645,7 @@ export class MainHeader extends LitElement {
 
                 <div class="header-actions ask-action" @click=${() => this._handleAskClick()}>
                     <div class="action-text">
-                        <div class="action-text-content">${i18n.t('header.ask')}</div>
+                        <div class="action-text-content">${t('header.ask')}</div>
                     </div>
                     <div class="icon-container">
                         ${this.renderShortcut(this.shortcuts.nextStep)}
@@ -655,7 +654,7 @@ export class MainHeader extends LitElement {
 
                 <div class="header-actions" @click=${() => this._handleToggleAllWindowsVisibility()}>
                     <div class="action-text">
-                        <div class="action-text-content">Show/Hide</div>
+                        <div class="action-text-content">${t('header.showHide')}</div>
                     </div>
                     <div class="icon-container">
                         ${this.renderShortcut(this.shortcuts.toggleVisibility)}

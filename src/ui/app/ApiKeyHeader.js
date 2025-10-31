@@ -1,5 +1,5 @@
 import { html, css, LitElement } from '../assets/lit-core-2.7.4.min.js';
-import { i18n } from '../../utils/i18n.js';
+import { t } from '../../utils/useTranslation.js';
 
 export class ApiKeyHeader extends LitElement {
     //////// after_modelStateService ////////
@@ -1942,15 +1942,15 @@ export class ApiKeyHeader extends LitElement {
                 <div class="header">
                     <div class="back-button" @click=${this.handleBack}>
                         <i class="arrow-icon-left"></i>
-                        <div class="back-button-text">${i18n.t('apiKey.back')}</div>
+                        <div class="back-button-text">${t('apiKey.back')}</div>
                     </div>
-                    <div class="title">${i18n.t('apiKey.usePersonalApiKeys')}</div>
+                    <div class="title">${t('apiKey.usePersonalApiKeys')}</div>
                 </div>
 
                 <!-- LLM Section -->
                 <div class="section">
                     <div class="row">
-                        <div class="label">${i18n.t('apiKey.selectLlmProvider')}</div>
+                        <div class="label">${t('apiKey.selectLlmProvider')}</div>
                         <div class="provider-selector">
                             ${this.providers.llm.map(
                                 p => html`
@@ -1966,7 +1966,7 @@ export class ApiKeyHeader extends LitElement {
                         </div>
                     </div>
                     <div class="row">
-                        <div class="label">${i18n.t('apiKey.enterApiKey')}</div>
+                        <div class="label">${t('apiKey.enterApiKey')}</div>
                         ${this.llmProvider === 'ollama'
                             ? this._renderOllamaStateUI()
                             : html`
@@ -1974,7 +1974,7 @@ export class ApiKeyHeader extends LitElement {
                                       <input
                                           type="password"
                                           class="api-input ${this.llmError ? 'invalid' : ''}"
-                                          placeholder="${i18n.t('apiKey.enterYourApiKey', { provider: llmProviderName })}"
+                                          placeholder="${t('apiKey.enterYourApiKey', { provider: llmProviderName })}"
                                           .value=${this.llmApiKey}
                                           @input=${e => {
                                               this.llmApiKey = e.target.value;
@@ -1991,7 +1991,7 @@ export class ApiKeyHeader extends LitElement {
                 <!-- STT Section -->
                 <div class="section">
                     <div class="row">
-                        <div class="label">${i18n.t('apiKey.selectSttProvider')}</div>
+                        <div class="label">${t('apiKey.selectSttProvider')}</div>
                         <div class="provider-selector">
                             ${this.providers.stt.map(
                                 p => html`
@@ -2007,11 +2007,11 @@ export class ApiKeyHeader extends LitElement {
                         </div>
                     </div>
                     <div class="row">
-                        <div class="label">${i18n.t('apiKey.enterSttApiKey')}</div>
+                        <div class="label">${t('apiKey.enterSttApiKey')}</div>
                         ${this.sttProvider === 'ollama'
                             ? html`
                                   <div class="api-input" style="background: transparent; border: none; text-align: right; color: #a0a0a0;">
-                                      ${i18n.t('apiKey.sttNotSupportedByOllama')}
+                                      ${t('apiKey.sttNotSupportedByOllama')}
                                   </div>
                               `
                             : this.sttProvider === 'whisper'
@@ -2026,7 +2026,7 @@ export class ApiKeyHeader extends LitElement {
                                             }}
                                             ?disabled=${this.isLoading}
                                         >
-                                            <option value="">${i18n.t('apiKey.selectModel')}</option>
+                                            <option value="">${t('apiKey.selectModel')}</option>
                                             ${[
                                                 { id: 'whisper-tiny', name: 'Whisper Tiny (39M)' },
                                                 { id: 'whisper-base', name: 'Whisper Base (74M)' },
@@ -2042,7 +2042,7 @@ export class ApiKeyHeader extends LitElement {
                                         <input
                                             type="password"
                                             class="api-input ${this.sttError ? 'invalid' : ''}"
-                                            placeholder="${i18n.t('apiKey.enterYourSttApiKey')}"
+                                            placeholder="${t('apiKey.enterYourSttApiKey')}"
                                             .value=${this.sttApiKey}
                                             @input=${e => {
                                                 this.sttApiKey = e.target.value;
@@ -2058,20 +2058,20 @@ export class ApiKeyHeader extends LitElement {
                 <div class="confirm-button-container">
                     <button class="confirm-button" @click=${this.handleSubmit} ?disabled=${isButtonDisabled}>
                         ${this.isLoading
-                            ? i18n.t('apiKey.settingUp')
+                            ? t('apiKey.settingUp')
                             : this.installingModel
-                              ? i18n.t('apiKey.installingModel', { model: this.installingModel })
+                              ? t('apiKey.installingModel', { model: this.installingModel })
                               : Object.keys(this.whisperInstallingModels).length > 0
-                                ? i18n.t('apiKey.downloading')
-                                : i18n.t('apiKey.confirm')}
+                                ? t('apiKey.downloading')
+                                : t('apiKey.confirm')}
                     </button>
                 </div>
 
                 <div class="footer">
-                    ${i18n.t('apiKey.getApiKeyFrom')}
+                    ${t('apiKey.getApiKeyFrom')}
                     <br />
-                    ${i18n.t('apiKey.privacyNotice')}
-                    <span class="footer-link" @click=${this.openPrivacyPolicy}>${i18n.t('apiKey.seeDetails')}</span>
+                    ${t('apiKey.privacyNotice')}
+                    <span class="footer-link" @click=${this.openPrivacyPolicy}>${t('apiKey.seeDetails')}</span>
                 </div>
 
                 <div class="error-message ${this.shouldFadeMessage('error') ? 'message-fade-out' : ''}" @animationend=${this.handleMessageFadeEnd}>

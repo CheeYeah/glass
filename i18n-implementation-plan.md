@@ -1,100 +1,288 @@
-# 多语言改造实施计划
+# i18next 国际化重构实施计划
 
 ## 项目概述
-为 PickleGlass 项目添加国际化支持，支持中文和英文两种语言。
+
+本项目是一个Electron应用程序，现需要将现有的国际化方案完全重构为基于i18next的解决方案。i18next是一个功能强大、生态丰富的国际化框架，支持多种框架和环境，非常适合本项目的需求。
 
 ## 实施阶段
 
-### 第一阶段：基础架构搭建 ✅ 已完成
-- [x] 创建语言资源文件 (`src/locales/`)
-  - `en.json` - 英文资源
-  - `zh-CN.json` - 中文资源
-- [x] 创建 i18n 工具 (`src/utils/i18n.js`)
-  - 支持动态语言切换
-  - 支持语言资源加载
-  - 提供翻译函数
+### 阶段一：环境准备与基础配置
 
-### 第二阶段：UI组件国际化
-- [x] AskView.js 组件国际化
-  - [x] 添加 i18n 导入
-  - [x] 替换硬编码文本：
-    - "Ask about your screen or audio" → `ask.placeholder`
-    - "Submit" → `ask.send`
-    - "AI Response" → `ask.title`
-    - "Thinking..." → `ask.thinking`
-- [x] SettingsView.js 组件国际化 ✅ 已完成
-  - [x] 添加 i18n 导入
-  - [x] 替换所有硬编码文本：
-    - Loading... → `settings.loading`
-    - Save/Clear → `settings.save`/`settings.clear`
-    - Ollama状态消息 → `settings.ollamaRunning` 等
-    - Whisper状态消息 → `settings.whisperEnabled` 等
-    - API密钥占位符 → `settings.usingPicklesKey`/`settings.enterApiKey`
-    - 模型选择界面 → `settings.changeLlmModel`/`settings.changeSttModel`
-    - 快捷键编辑 → `settings.editShortcuts`
-    - 预设管理 → `settings.myPresets`/`settings.selected`
-    - 按钮文本 → `settings.personalizeMeetingNotes`/`settings.automaticUpdates` 等
-    - 账户信息 → `settings.account`/`settings.loggedIn`/`settings.notLoggedIn`
-    - 退出按钮 → `settings.logout`/`settings.login`/`settings.quit`
-- [ ] 其他 UI 组件国际化
+**目标**：安装必要依赖并创建i18next基础配置
 
-### 第三阶段：设置界面语言切换
-- [ ] 在设置界面添加语言选择器
-- [ ] 实现语言切换功能
-- [ ] 持久化语言设置
+**任务列表**：
+- [x] 切换到Node.js v20版本 (`nvm use 20`)
+- [x] 安装i18next核心依赖：
+  - `i18next` - 核心国际化框架
+  - `i18next-browser-languagedetector` - 浏览器语言检测插件
+- [ ] 安装其他必要插件：
+  - `i18next-resources-to-backend` - 资源加载插件
+  - `electron-store` - 用于持久化语言设置
+- [ ] 创建新的i18next配置文件
+- [ ] 设计资源文件结构和命名规范
 
-### 第四阶段：测试和优化
-- [ ] 测试中英文切换功能
-- [ ] 检查文本溢出和布局问题
-- [ ] 优化翻译内容
+**技术实现**：
 
-## 技术实现细节
+```javascript
+// src/utils/i18nextConfig.js
+import i18next from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import resourcesToBackend from 'i18next-resources-to-backend';
+import Store from 'electron-store';
 
-### 语言资源结构
+const store = new Store();
+
+export const initI18next = async () => {
+  // 从存储中获取保存的语言设置
+  const savedLanguage = store.get('appLanguage');
+  
+  await i18next
+    .use(LanguageDetector)
+    .use(resourcesToBackend((language, namespace, callback) => {
+      import(`../locales/${language}/${namespace}.json`)
+        .then(res => {
+          callback(null, res.default);
+        })
+        .catch(err => {
+          callback(err, null);
+        });
+    }))
+    .init({
+      lng: savedLanguage || 'en',
+      fallbackLng: 'en',
+      supportedLngs: ['en', 'zh-CN'],
+      ns: ['common', 'app', 'ask', 'listen', 'settings'],
+      defaultNS: 'common',
+      fallbackNS: ['common'],
+      interpolation: {
+        escapeValue: false,
+      },
+      detection: {
+        // 自定义语言检测选项
+        order: ['navigator', 'localStorage'],
+        lookupLocalStorage: 'i18nextLng',
+      },
+      debug: process.env.NODE_ENV === 'development',
+    });
+  
+  return i18next;
+};
+
+export const changeLanguage = async (language) => {
+  await i18next.changeLanguage(language);
+  store.set('appLanguage', language);
+};
+
+export default i18next;
+```
+
+### 阶段二：语言资源迁移
+
+**目标**：将现有语言资源文件转换为i18next兼容格式
+
+**任务列表**：
+- [ ] 分析现有语言资源结构 (`src/locales/en.json` 和 `src/locales/zh-CN.json`)
+- [ ] 按照命名空间重构语言资源文件
+- [ ] 创建新的资源文件目录结构
+- [ ] 验证资源文件格式正确性
+
+**技术实现**：
+
+**资源文件结构设计**：
+
+```
+src/locales/
+├── en/
+│   ├── common.json       # 通用翻译
+│   ├── app.json          # 应用主界面翻译
+│   ├── ask.json          # Ask功能翻译
+│   ├── listen.json       # Listen功能翻译
+│   └── settings.json     # 设置页面翻译
+└── zh-CN/
+    ├── common.json
+    ├── app.json
+    ├── ask.json
+    ├── listen.json
+    └── settings.json
+```
+
+**资源文件示例** (`common.json`):
+
 ```json
 {
-  "common": {
-    "ok": "确定",
-    "cancel": "取消",
-    "save": "保存",
-    "delete": "删除"
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close"
   },
-  "app": {
-    "title": "应用标题",
-    "description": "应用描述"
+  "loading": {
+    "loading": "Loading...",
+    "processing": "Processing..."
   },
-  "ask": {
-    "title": "AI 响应",
-    "placeholder": "询问关于您的屏幕或音频",
-    "send": "发送",
-    "thinking": "思考中..."
-  },
-  "settings": {
-    "title": "设置",
-    "language": "语言"
+  "errors": {
+    "somethingWentWrong": "Something went wrong",
+    "networkError": "Network error"
   }
 }
 ```
 
-### i18n 工具功能
-- 自动检测系统语言
-- 支持手动语言切换
-- 提供翻译函数 `i18n.t(key)`
-- 支持嵌套键访问
+### 阶段三：API适配与组件更新
+
+**目标**：更新所有组件以使用新的i18next API
+
+**任务列表**：
+- [ ] 创建统一的翻译钩子/函数
+- [ ] 更新组件以使用i18next翻译
+- [ ] 处理复杂翻译场景（复数、上下文、格式化等）
+- [ ] 集成到现有代码库
+
+**技术实现**：
+
+```javascript
+// src/utils/useTranslation.js
+import { useCallback } from 'react';
+import i18next from './i18nextConfig';
+
+// 通用翻译函数
+export const t = (key, options = {}) => {
+  return i18next.t(key, options);
+};
+
+// React钩子版本（如果使用React）
+export const useTranslation = (namespace = 'common') => {
+  const t = useCallback((key, options = {}) => {
+    return i18next.t(key, { ...options, ns: options.ns || namespace });
+  }, [namespace]);
+  
+  const i18n = useCallback(() => i18next, []);
+  
+  return { t, i18n };
+};
+```
+
+**组件使用示例**：
+
+```javascript
+// 类组件中使用
+import { t } from '../utils/useTranslation';
+
+class MyComponent extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>{t('app.title')}</h1>
+        <button>{t('buttons.save')}</button>
+      </div>
+    );
+  }
+}
+
+// 函数组件中使用
+import { useTranslation } from '../utils/useTranslation';
+
+function MyFunctionalComponent() {
+  const { t } = useTranslation('app');
+  
+  return (
+    <div>
+      <h1>{t('title')}</h1>
+      <button>{t('buttons.save', { ns: 'common' })}</button>
+    </div>
+  );
+}
+```
+
+### 阶段四：语言切换功能实现
+
+**目标**：实现语言切换界面和功能
+
+**任务列表**：
+- [ ] 在设置页面添加语言选择器
+- [ ] 实现语言切换逻辑
+- [ ] 实现语言更改后的界面更新
+- [ ] 持久化保存用户语言偏好
+
+**技术实现**：
+
+```javascript
+// src/features/settings/LanguageSelector.js
+import { useState } from 'react';
+import { changeLanguage, t } from '../../utils/useTranslation';
+
+const LanguageSelector = () => {
+  const [selectedLanguage, setSelectedLanguage] = useState(i18next.language);
+  
+  const handleChange = async (event) => {
+    const language = event.target.value;
+    setSelectedLanguage(language);
+    await changeLanguage(language);
+  };
+  
+  return (
+    <div className="language-selector">
+      <label>{t('settings.language')}</label>
+      <select value={selectedLanguage} onChange={handleChange}>
+        <option value="en">{t('languages.english')}</option>
+        <option value="zh-CN">{t('languages.chinese')}</option>
+      </select>
+    </div>
+  );
+};
+```
+
+### 阶段五：测试与优化
+
+**目标**：全面测试国际化功能并进行优化
+
+**任务列表**：
+- [ ] 语言切换测试
+- [ ] 翻译完整性检查
+- [ ] 边缘情况测试（缺失键、不支持的语言等）
+- [ ] 性能优化
+- [ ] 文档更新
+
+## 已完成工作
+
+- [x] 切换到Node.js v20版本
+- [x] 安装i18next核心依赖
+- [x] 安装i18next-resources-to-backend、electron-store依赖
+- [x] 创建i18next核心配置文件
+- [x] 创建useTranslation工具函数
 
 ## 当前进度
-- ✅ 基础架构已搭建
-- ✅ AskView.js 国际化已完成
-- ✅ SettingsView.js 国际化已完成
-- 🔄 准备进行其他UI组件国际化
+
+- **整体进度**：15%
+- **下一阶段**：完成阶段一剩余任务，开始阶段二的资源迁移
 
 ## 下一步行动
-1. 添加语言切换功能到设置界面
-2. 测试中英文切换效果
-3. 修复可能出现的布局问题
-4. 进行其他UI组件的国际化
+
+1. 安装剩余必要依赖
+2. 创建i18next配置文件
+3. 开始语言资源迁移
+4. 更新组件以使用新API
+
+## 时间估算
+
+| 阶段 | 预计完成时间 |
+|------|------------|
+| 阶段一 | 1天 |
+| 阶段二 | 2天 |
+| 阶段三 | 5天 |
+| 阶段四 | 2天 |
+| 阶段五 | 2天 |
+| **总计** | **12天** |
+
+## 风险与挑战
+
+1. **翻译完整性**：确保所有UI元素都被正确翻译
+2. **性能优化**：处理大量翻译资源的加载性能
+3. **复杂翻译**：处理特殊格式、复数形式等复杂翻译场景
+4. **兼容性**：确保在Electron环境中正常工作
 
 ## 注意事项
-- 确保所有硬编码文本都被替换为 i18n 调用
-- 注意动态文本的处理（如变量插值）
-- 测试不同语言下的文本长度对布局的影响
+
+1. 所有新添加的文本必须立即添加到翻译文件中
+2. 使用有意义的键名，避免使用数字或无意义字符
+3. 对于动态内容，使用i18next的插值功能
+4. 测试时确保检查所有语言的显示效果

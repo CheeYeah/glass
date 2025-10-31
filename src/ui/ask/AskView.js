@@ -719,7 +719,7 @@ export class AskView extends LitElement {
         this.isLoading = false;
         this.copyState = 'idle';
         this.showTextInput = true;
-        this.headerText = i18n.t('ask.title');
+        this.headerText = t('ask.title');
         this.headerAnimating = false;
         this.isStreaming = false;
 
@@ -751,7 +751,7 @@ export class AskView extends LitElement {
     connectedCallback() {
         super.connectedCallback();
 
-        console.log(i18n.t('common.askViewConnected'));
+        console.log(t('common.askViewConnected'));
 
         document.addEventListener('keydown', this.handleEscKey);
 
@@ -770,13 +770,13 @@ export class AskView extends LitElement {
         if (container) this.resizeObserver.observe(container);
 
         this.handleQuestionFromAssistant = (event, question) => {
-            console.log(i18n.t('common.receivedQuestion'), question);
+            console.log(t('common.receivedQuestion'), question);
             this.handleSendText(null, question);
         };
 
         if (window.api) {
             window.api.askView.onShowTextInput(() => {
-                console.log(i18n.t('common.showTextInputSignal'));
+                console.log(t('common.showTextInputSignal'));
                 if (!this.showTextInput) {
                     this.showTextInput = true;
                     this.updateComplete.then(() => this.focusTextInput());
@@ -804,7 +804,7 @@ export class AskView extends LitElement {
                   }
                 }
               });
-            console.log(i18n.t('common.ipcListenersRegistered'));
+            console.log(t('common.ipcListenersRegistered'));
         }
     }
 
@@ -812,7 +812,7 @@ export class AskView extends LitElement {
         super.disconnectedCallback();
         this.resizeObserver?.disconnect();
 
-        console.log(i18n.t('common.askViewDisconnected'));
+        console.log(t('common.askViewDisconnected'));
 
         document.removeEventListener('keydown', this.handleEscKey);
 
@@ -835,7 +835,7 @@ export class AskView extends LitElement {
             window.api.askView.removeOnShowTextInput(this.handleShowTextInput);
             window.api.askView.removeOnScrollResponseUp(this.handleScroll);
             window.api.askView.removeOnScrollResponseDown(this.handleScroll);
-            console.log(i18n.t('common.ipcListenersRemovalNeeded'));
+            console.log(t('common.ipcListenersRemovalNeeded'));
         }
     }
 
@@ -865,13 +865,13 @@ export class AskView extends LitElement {
                             try {
                                 return this.hljs.highlight(code, { language: lang }).value;
                             } catch (err) {
-                                console.warn(i18n.t('common.highlightError'), err);
+                                console.warn(t('common.highlightError'), err);
                             }
                         }
                         try {
                             return this.hljs.highlightAuto(code).value;
                         } catch (err) {
-                            console.warn(i18n.t('common.autoHighlightError'), err);
+                            console.warn(t('common.autoHighlightError'), err);
                         }
                         return code;
                     },
@@ -884,15 +884,15 @@ export class AskView extends LitElement {
 
                 this.isLibrariesLoaded = true;
                 this.renderContent();
-                console.log(i18n.t('common.markdownLibrariesLoaded'));
+                console.log(t('common.markdownLibrariesLoaded'));
             }
 
             if (this.DOMPurify) {
                 this.isDOMPurifyLoaded = true;
-                console.log(i18n.t('common.domPurifyLoaded'));
+                console.log(t('common.domPurifyLoaded'));
             }
         } catch (error) {
-            console.error(i18n.t('common.loadLibrariesFailed'), error);
+            console.error(t('common.loadLibrariesFailed'), error);
         }
     }
 
@@ -919,7 +919,7 @@ export class AskView extends LitElement {
         this.currentQuestion = '';
         this.isLoading = false;
         this.isStreaming = false;
-        this.headerText = i18n.t('ask.title');
+        this.headerText = t('ask.title');
         this.showTextInput = true;
         this.lastProcessedLength = 0;
         this.smdParser = null;
@@ -960,7 +960,7 @@ export class AskView extends LitElement {
         try {
             return this.marked(text);
         } catch (error) {
-            console.error(i18n.t('common.markdownParseError'), error);
+            console.error(t('common.markdownParseError'), error);
             return text;
         }
     }
@@ -1069,7 +1069,7 @@ export class AskView extends LitElement {
             responseContainer.scrollTop = responseContainer.scrollHeight;
             
         } catch (error) {
-            console.error(i18n.t('common.streamingMarkdownError'), error);
+            console.error(t('common.streamingMarkdownError'), error);
             // 에러 발생 시 기본 텍스트 렌더링으로 폴백
             this.renderFallbackContent(responseContainer);
         }
@@ -1102,7 +1102,7 @@ export class AskView extends LitElement {
                     });
                 }
             } catch (error) {
-                console.error(i18n.t('common.fallbackRenderingError'), error);
+                console.error(t('common.fallbackRenderingError'), error);
                 responseContainer.textContent = textToRender;
             }
         } else {
@@ -1140,14 +1140,14 @@ export class AskView extends LitElement {
     }
 
     startHeaderAnimation() {
-        this.animateHeaderText(i18n.t('ask.analyzing'));
+        this.animateHeaderText(t('ask.analyzing'));
 
         if (this.headerAnimationTimeout) {
             clearTimeout(this.headerAnimationTimeout);
         }
 
         this.headerAnimationTimeout = setTimeout(() => {
-            this.animateHeaderText(i18n.t('ask.thinking'));
+            this.animateHeaderText(t('ask.thinking'));
         }, 1500);
     }
 
@@ -1212,16 +1212,16 @@ export class AskView extends LitElement {
             const sanitized = this.DOMPurify.sanitize(testHtml);
 
             if (this.DOMPurify.removed && this.DOMPurify.removed.length > 0) {
-                console.warn(i18n.t('common.unsafeContent'));
+                console.warn(t('common.unsafeContent'));
                 return;
             }
         }
 
-        const textToCopy = `${i18n.t('common.question')}: ${this.currentQuestion}\n\n${i18n.t('common.answer')}: ${responseToCopy}`;
+        const textToCopy = `${t('common.question')}: ${this.currentQuestion}\n\n${t('common.answer')}: ${responseToCopy}`;
 
         try {
             await navigator.clipboard.writeText(textToCopy);
-            console.log(i18n.t('common.copySuccess'));
+            console.log(t('common.copySuccess'));
 
             this.copyState = 'copied';
             this.requestUpdate();
@@ -1235,7 +1235,7 @@ export class AskView extends LitElement {
                 this.requestUpdate();
             }, 1500);
         } catch (err) {
-            console.error(i18n.t('common.copyFailed'), err);
+            console.error(t('common.copyFailed'), err);
         }
     }
 
@@ -1247,7 +1247,7 @@ export class AskView extends LitElement {
 
         try {
             await navigator.clipboard.writeText(lineToCopy);
-            console.log(i18n.t('common.lineCopySuccess'));
+            console.log(t('common.lineCopySuccess'));
 
             // '복사됨' 상태로 UI 즉시 업데이트
             this.lineCopyState = { ...this.lineCopyState, [lineIndex]: true };
@@ -1266,7 +1266,7 @@ export class AskView extends LitElement {
                 this.requestUpdate(); // UI 업데이트 요청
             }, 1500);
         } catch (err) {
-            console.error(i18n.t('common.lineCopyFailed'), err);
+            console.error(t('common.lineCopyFailed'), err);
         }
     }
 
@@ -1279,7 +1279,7 @@ export class AskView extends LitElement {
 
         if (window.api) {
             window.api.askView.sendMessage(text).catch(error => {
-                console.error(i18n.t('common.errorSendingText'), error);
+                console.error(t('common.errorSendingText'), error);
             });
         }
     }
@@ -1331,7 +1331,7 @@ export class AskView extends LitElement {
 
     render() {
         const hasResponse = this.isLoading || this.currentResponse || this.isStreaming;
-        const headerText = this.isLoading ? i18n.t('ask.thinking') : i18n.t('ask.title');
+        const headerText = this.isLoading ? t('ask.thinking') : t('ask.title');
 
         return html`
             <div class="ask-container">
@@ -1386,7 +1386,7 @@ export class AskView extends LitElement {
                     <input
                         type="text"
                         id="textInput"
-                        placeholder=${i18n.t('ask.placeholder')}
+                        placeholder=${t('ask.placeholder')}
                         @keydown=${this.handleTextKeydown}
                         @focus=${this.handleInputFocus}
                     />
@@ -1394,7 +1394,7 @@ export class AskView extends LitElement {
                         class="submit-btn"
                         @click=${this.handleSendText}
                     >
-                        <span class="btn-label">${i18n.t('ask.send')}</span>
+                        <span class="btn-label">${t('ask.send')}</span>
                         <span class="btn-icon">
                             ↵
                         </span>
@@ -1425,7 +1425,7 @@ export class AskView extends LitElement {
 
             window.api.askView.adjustWindowHeight("ask", targetHeight);
 
-        }).catch(err => console.error(i18n.t('common.adjustWindowHeightError'), err));
+        }).catch(err => console.error(t('common.adjustWindowHeightError'), err));
     }
 
     // Throttled wrapper to avoid excessive IPC spam (executes at most once per animation frame)

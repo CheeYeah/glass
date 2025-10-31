@@ -1,5 +1,5 @@
 import { LitElement, html, css } from '../assets/lit-core-2.7.4.min.js';
-import { i18n } from '../../utils/i18n.js';
+import { t } from '../../utils/useTranslation.js';
 
 export class PermissionHeader extends LitElement {
     static styles = css`
@@ -490,11 +490,11 @@ export class PermissionHeader extends LitElement {
                         <path d="M1 1L9 9M9 1L1 9" stroke="currentColor" stroke-width="1.2" />
                     </svg>
                 </button>
-                <h1 class="title">${i18n.t('permission.setupRequired')}</h1>
+                <h1 class="title">${t('permission.setupRequired')}</h1>
 
                 <div class="form-content ${allGranted ? 'all-granted' : ''}">
                     ${!allGranted ? html`
-                        <div class="subtitle">${i18n.t('permission.grantAccess')}${isKeychainRequired ? i18n.t('permission.andKeychain') : ''}${i18n.t('permission.toContinue')}</div>
+                        <div class="subtitle">${t('permission.grantAccess')}${isKeychainRequired ? t('permission.andKeychain') : ''}${t('permission.toContinue')}</div>
                         
                         <div class="permission-status">
                             <div class="permission-item ${this.microphoneGranted === 'granted' ? 'granted' : ''}">
@@ -502,12 +502,12 @@ export class PermissionHeader extends LitElement {
                                     <svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                     </svg>
-                                    <span>${i18n.t('permission.microphone')} ✓</span>
+                                    <span>${t('permission.microphone')} ✓</span>
                                 ` : html`
                                     <svg class="permission-icon" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd" />
                                     </svg>
-                                    <span>${i18n.t('permission.microphone')}</span>
+                                    <span>${t('permission.microphone')}</span>
                                 `}
                             </div>
                             
@@ -516,12 +516,12 @@ export class PermissionHeader extends LitElement {
                                     <svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                     </svg>
-                                    <span>${i18n.t('permission.screen')} ✓</span>
+                                    <span>${t('permission.screen')} ✓</span>
                                 ` : html`
                                     <svg class="permission-icon" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z" clip-rule="evenodd" />
                                     </svg>
-                                    <span>${i18n.t('permission.screenRecording')}</span>
+                                    <span>${t('permission.screenRecording')}</span>
                                 `}
                             </div>
 
@@ -531,12 +531,12 @@ export class PermissionHeader extends LitElement {
                                         <svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                         </svg>
-                                        <span>${i18n.t('permission.dataEncryption')} ✓</span>
+                                        <span>${t('permission.dataEncryption')} ✓</span>
                                     ` : html`
                                         <svg class="permission-icon" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M18 8a6 6 0 01-7.744 5.668l-1.649 1.652c-.63.63-1.706.19-1.706-.742V12.18a.75.75 0 00-1.5 0v2.696c0 .932-1.075 1.372-1.706.742l-1.649-1.652A6 6 0 112 8zm-4 0a.75.75 0 00.75-.75A3.75 3.75 0 018.25 4a.75.75 0 000 1.5 2.25 2.25 0 012.25 2.25.75.75 0 00.75.75z" clip-rule="evenodd" />
                                         </svg>
-                                        <span>${i18n.t('permission.dataEncryption')}</span>
+                                        <span>${t('permission.dataEncryption')}</span>
                                     `}
                                 </div>
                             ` : ''}
@@ -547,7 +547,7 @@ export class PermissionHeader extends LitElement {
                             @click=${this.handleMicrophoneClick}
                             ?disabled=${this.microphoneGranted === 'granted'}
                         >
-                            ${this.microphoneGranted === 'granted' ? i18n.t('permission.microphoneAccessGranted') : i18n.t('permission.grantMicrophoneAccess')}
+                            ${this.microphoneGranted === 'granted' ? t('permission.microphoneAccessGranted') : t('permission.grantMicrophoneAccess')}
                         </button>
 
                         <button 
@@ -555,7 +555,7 @@ export class PermissionHeader extends LitElement {
                             @click=${this.handleScreenClick}
                             ?disabled=${this.screenGranted === 'granted'}
                         >
-                            ${this.screenGranted === 'granted' ? i18n.t('permission.screenRecordingGranted') : i18n.t('permission.grantScreenRecordingAccess')}
+                            ${this.screenGranted === 'granted' ? t('permission.screenRecordingGranted') : t('permission.grantScreenRecordingAccess')}
                         </button>
 
                         ${isKeychainRequired ? html`
@@ -564,10 +564,10 @@ export class PermissionHeader extends LitElement {
                                 @click=${this.handleKeychainClick}
                                 ?disabled=${this.keychainGranted === 'granted'}
                             >
-                                ${this.keychainGranted === 'granted' ? i18n.t('permission.encryptionEnabled') : i18n.t('permission.enableEncryption')}
+                                ${this.keychainGranted === 'granted' ? t('permission.encryptionEnabled') : t('permission.enableEncryption')}
                             </button>
                             <div class="subtitle" style="visibility: ${this.keychainGranted === 'granted' ? 'hidden' : 'visible'}">
-                                ${i18n.t('permission.keychainDescription')}
+                                ${t('permission.keychainDescription')}
                             </div>
                         ` : ''}
                     ` : html`
@@ -575,7 +575,7 @@ export class PermissionHeader extends LitElement {
                             class="continue-button" 
                             @click=${this.handleContinue}
                         >
-                            ${i18n.t('permission.continueToGlass')}
+                            ${t('permission.continueToGlass')}
                         </button>
                     `}
                 </div>

@@ -1,6 +1,6 @@
 import { html, css, LitElement } from '../assets/lit-core-2.7.4.min.js';
-import { i18n } from '../../utils/i18n.js';
-// import { getOllamaProgressTracker } from '../../features/common/services/localProgressTracker.js'; // 제거됨
+import { t } from '../../utils/useTranslation.js';
+// import { getOllaProgressTracker } from '../../features/common/services/localProgressTracker.js'; // 제거됨
 
 export class SettingsView extends LitElement {
     static styles = css`
@@ -500,7 +500,7 @@ export class SettingsView extends LitElement {
         showPresets: { type: Boolean, state: true },
         autoUpdateEnabled: { type: Boolean, state: true },
         autoUpdateLoading: { type: Boolean, state: true },
-        // Ollama related properties
+        // OllaMa related properties
         ollamaStatus: { type: Object, state: true },
         ollamaModels: { type: Array, state: true },
         installingModels: { type: Object, state: true },
@@ -528,7 +528,7 @@ export class SettingsView extends LitElement {
         this.presets = [];
         this.selectedPreset = null;
         this.showPresets = false;
-        // Ollama related
+        // OllaMa related
         this.ollamaStatus = { installed: false, running: false };
         this.ollamaModels = [];
         this.installingModels = {}; // { modelName: progress }
@@ -578,11 +578,11 @@ export class SettingsView extends LitElement {
 
     async loadLocalAIStatus() {
         try {
-            // Load Ollama status
-            const ollamaStatus = await window.api.settingsView.getOllamaStatus();
+            // Load OllaMa status
+            const ollaMaStatus = await window.api.settingsView.getOllaMaStatus();
             if (ollamaStatus?.success) {
-                this.ollamaStatus = { installed: ollamaStatus.installed, running: ollamaStatus.running };
-                this.ollamaModels = ollamaStatus.models || [];
+                this.ollamaStatus = { installed: ollaMaStatus.installed, running: ollaMaStatus.running };
+                this.ollamaModels = ollaMaStatus.models || [];
             }
             
             // Load Whisper models status only if Whisper is enabled
@@ -657,14 +657,14 @@ export class SettingsView extends LitElement {
         if (!input) return;
         const key = input.value;
         
-        // For Ollama, we need to ensure it's ready first
+        // For OllaMa, we need to ensure it's ready first
         if (provider === 'ollama') {
         this.saving = true;
             
-            // First ensure Ollama is installed and running
-            const ensureResult = await window.api.settingsView.ensureOllamaReady();
+            // First ensure OllaMa is installed and running
+            const ensureResult = await window.api.settingsView.ensureOllaMaReady();
             if (!ensureResult.success) {
-                alert(`Failed to setup Ollama: ${ensureResult.error}`);
+                alert(`Failed to setup OllaMa: ${ensureResult.error}`);
                 this.saving = false;
                 return;
             }
@@ -674,9 +674,9 @@ export class SettingsView extends LitElement {
             
             if (result.success) {
                 await this.refreshModelData();
-                await this.refreshOllamaStatus();
+                await this.refreshOllaMaStatus();
             } else {
-                alert(`Failed to connect to Ollama: ${result.error}`);
+                alert(`Failed to connect to OllaMa: ${result.error}`);
             }
             this.saving = false;
             return;
@@ -751,13 +751,13 @@ export class SettingsView extends LitElement {
     }
     
     async selectModel(type, modelId) {
-        // Check if this is an Ollama model that needs to be installed
+        // Check if this is an OllaMa model that needs to be installed
         const provider = this.getProviderForModel(type, modelId);
         if (provider === 'ollama') {
-            const ollamaModel = this.ollamaModels.find(m => m.name === modelId);
+            const ollaMaModel = this.ollamaModels.find(m => m.name === modelId);
             if (ollamaModel && !ollamaModel.installed && !ollamaModel.installing) {
                 // Need to install the model first
-                await this.installOllamaModel(modelId);
+                await this.installOllaMaModel(modelId);
                 return;
             }
         }
@@ -783,17 +783,17 @@ export class SettingsView extends LitElement {
         this.requestUpdate();
     }
     
-    async refreshOllamaStatus() {
-        const ollamaStatus = await window.api.settingsView.getOllamaStatus();
+    async refreshOllaMaStatus() {
+        const ollaMaStatus = await window.api.settingsView.getOllaMaStatus();
         if (ollamaStatus?.success) {
-            this.ollamaStatus = { installed: ollamaStatus.installed, running: ollamaStatus.running };
-            this.ollamaModels = ollamaStatus.models || [];
+            this.ollamaStatus = { installed: ollaMaStatus.installed, running: ollaMaStatus.running };
+            this.ollamaModels = ollaMaStatus.models || [];
         }
     }
     
-    async installOllamaModel(modelName) {
+    async installOllaMaModel(modelName) {
         try {
-            // Ollama 모델 다운로드 시작
+            // OllaMa 모델 다운로드 시작
             this.installingModels = { ...this.installingModels, [modelName]: 0 };
             this.requestUpdate();
 
@@ -809,7 +809,7 @@ export class SettingsView extends LitElement {
             window.api.settingsView.onLocalAIInstallProgress(progressHandler);
 
             try {
-                const result = await window.api.settingsView.pullOllamaModel(modelName);
+                const result = await window.api.settingsView.pullOllaMaModel(modelName);
                 
                 if (result.success) {
                     console.log(`[SettingsView] Model ${modelName} installed successfully`);
@@ -817,7 +817,7 @@ export class SettingsView extends LitElement {
                     this.requestUpdate();
                     
                     // 상태 새로고침
-                    await this.refreshOllamaStatus();
+                    await this.refreshOllaMaStatus();
                     await this.refreshModelData();
                 } else {
                     throw new Error(result.error || 'Installation failed');
@@ -929,11 +929,11 @@ export class SettingsView extends LitElement {
         this.cleanupIpcListeners();
         this.cleanupWindowResize();
         
-        // Cancel any ongoing Ollama installations when component is destroyed
+        // Cancel any ongoing OllaMa installations when component is destroyed
         const installingModels = Object.keys(this.installingModels);
         if (installingModels.length > 0) {
             installingModels.forEach(modelName => {
-                window.api.settingsView.cancelOllamaInstallation(modelName);
+                window.api.settingsView.cancelOllaInstallation(modelName);
             });
         }
     }
@@ -1059,10 +1059,10 @@ export class SettingsView extends LitElement {
 
     getMainShortcuts() {
         return [
-            { name: i18n.t('settings.showHide'), accelerator: this.shortcuts.toggleVisibility },
-            { name: i18n.t('settings.askAnything'), accelerator: this.shortcuts.nextStep },
-            { name: i18n.t('settings.scrollUpResponse'), accelerator: this.shortcuts.scrollUp },
-            { name: i18n.t('settings.scrollDownResponse'), accelerator: this.shortcuts.scrollDown },
+            { name: t('settings.showHide'), accelerator: this.shortcuts.toggleVisibility },
+            { name: t('settings.askAnything'), accelerator: this.shortcuts.nextStep },
+            { name: t('settings.scrollUpResponse'), accelerator: this.shortcuts.scrollUp },
+            { name: t('settings.scrollDownResponse'), accelerator: this.shortcuts.scrollDown },
         ];
     }
 
@@ -1149,8 +1149,8 @@ export class SettingsView extends LitElement {
         window.api.settingsView.firebaseLogout();
     }
 
-    async handleOllamaShutdown() {
-        console.log('[SettingsView] Shutting down Ollama service...');
+    async handleOllaMaShutdown() {
+        console.log('[SettingsView] Shutting down OllaMa service...');
         
         if (!window.api) return;
         
@@ -1159,21 +1159,21 @@ export class SettingsView extends LitElement {
             this.ollamaStatus = { ...this.ollamaStatus, running: false };
             this.requestUpdate();
             
-            const result = await window.api.settingsView.shutdownOllama(false); // Graceful shutdown
+            const result = await window.api.settingsView.shutdownOllaMa(false); // Graceful shutdown
             
             if (result.success) {
-                console.log('[SettingsView] Ollama shut down successfully');
+                console.log('[SettingsView] OllaMa shut down successfully');
                 // Refresh status to reflect the change
-                await this.refreshOllamaStatus();
+                await this.refreshOllaMaStatus();
             } else {
-                console.error('[SettingsView] Failed to shutdown Ollama:', result.error);
+                console.error('[SettingsView] Failed to shutdown OllaMa:', result.error);
                 // Restore previous state on error
-                await this.refreshOllamaStatus();
+                await this.refreshOllaMaStatus();
             }
         } catch (error) {
-            console.error('[SettingsView] Error during Ollama shutdown:', error);
+            console.error('[SettingsView] Error during OllaMa shutdown:', error);
             // Restore previous state on error
-            await this.refreshOllamaStatus();
+            await this.refreshOllaMaStatus();
         }
     }
 
@@ -1184,7 +1184,7 @@ export class SettingsView extends LitElement {
                 <div class="settings-container">
                     <div class="loading-state">
                         <div class="loading-spinner"></div>
-                        <span>${i18n.t('settings.loading')}</span>
+                        <span>${t('settings.loading')}</span>
                     </div>
                 </div>
             `;
@@ -1198,30 +1198,30 @@ export class SettingsView extends LitElement {
                     .filter(([id, config]) => !id.includes('-glass'))
                     .map(([id, config]) => {
                         if (id === 'ollama') {
-                            // Special UI for Ollama
+                            // Special UI for OllaMa
                             return html`
                                 <div class="provider-key-group">
                                     <label>${config.name} (Local)</label>
                                     ${this.ollamaStatus.installed && this.ollamaStatus.running ? html`
                                         <div style="padding: 8px; background: rgba(0,255,0,0.1); border-radius: 4px; font-size: 11px; color: rgba(0,255,0,0.8);">
-                                            ${i18n.t('settings.ollamaRunning')}
+                                            ${t('settings.ollamaRunning')}
                                         </div>
-                                        <button class="settings-button full-width danger" @click=${this.handleOllamaShutdown}>
-${i18n.t('settings.stopOllamaService')}
+                                        <button class="settings-button full-width danger" @click=${this.handleOllaMaShutdown}>
+${t('settings.stopOllaService')}
                                         </button>
                                     ` : this.ollamaStatus.installed ? html`
                                         <div style="padding: 8px; background: rgba(255,200,0,0.1); border-radius: 4px; font-size: 11px; color: rgba(255,200,0,0.8);">
-                                            ${i18n.t('settings.ollamaInstalledNotRunning')}
+                                            ${t('settings.ollamaInstalledNotRunning')}
                                         </div>
                                         <button class="settings-button full-width" @click=${() => this.handleSaveKey(id)}>
-${i18n.t('settings.startOllama')}
+${t('settings.startOlla')}
                                         </button>
                                     ` : html`
                                         <div style="padding: 8px; background: rgba(255,100,100,0.1); border-radius: 4px; font-size: 11px; color: rgba(255,100,100,0.8);">
-                                            ${i18n.t('settings.ollamaNotInstalled')}
+                                            ${t('settings.ollamaNotInstalled')}
                                         </div>
                                         <button class="settings-button full-width" @click=${() => this.handleSaveKey(id)}>
-${i18n.t('settings.installSetupOllama')}
+${t('settings.installSetupOlla')}
                                         </button>
                                     `}
                                 </div>
@@ -1235,14 +1235,14 @@ ${i18n.t('settings.installSetupOllama')}
                                     <label>${config.name} (Local STT)</label>
                                     ${this.apiKeys[id] === 'local' ? html`
                                         <div style="padding: 8px; background: rgba(0,255,0,0.1); border-radius: 4px; font-size: 11px; color: rgba(0,255,0,0.8); margin-bottom: 8px;">
-                                            ${i18n.t('settings.whisperEnabled')}
+                                            ${t('settings.whisperEnabled')}
                                         </div>
                                         <button class="settings-button full-width danger" @click=${() => this.handleClearKey(id)}>
-${i18n.t('settings.disableWhisper')}
+${t('settings.disableWhisper')}
                                         </button>
                                     ` : html`
                                         <button class="settings-button full-width" @click=${() => this.handleSaveKey(id)}>
-${i18n.t('settings.enableWhisperStt')}
+${t('settings.enableWhisperStt')}
                                         </button>
                                     `}
                                 </div>
@@ -1252,14 +1252,14 @@ ${i18n.t('settings.enableWhisperStt')}
                         // Regular providers
                         return html`
                         <div class="provider-key-group">
-                            <label for="key-input-${id}">${config.name} ${i18n.t('settings.apiKey')}</label>
+                            <label for="key-input-${id}">${config.name} ${t('settings.apiKey')}</label>
                             <input type="password" id="key-input-${id}"
-                                placeholder=${loggedIn ? i18n.t('settings.usingPicklesKey') : i18n.t('settings.enterApiKey', { provider: config.name })} 
+                                placeholder=${loggedIn ? t('settings.usingPicklesKey') : t('settings.enterApiKey', { provider: config.name })} 
                                 .value=${this.apiKeys[id] || ''}
                             >
                             <div class="key-buttons">
-                               <button class="settings-button" @click=${() => this.handleSaveKey(id)} >${i18n.t('settings.save')}</button>
-                               <button class="settings-button danger" @click=${() => this.handleClearKey(id)} }>${i18n.t('settings.clear')}</button>
+                               <button class="settings-button" @click=${() => this.handleSaveKey(id)} >${t('settings.save')}</button>
+                               <button class="settings-button danger" @click=${() => this.handleClearKey(id)} }>${t('settings.clear')}</button>
                             </div>
                         </div>
                         `;
@@ -1276,15 +1276,15 @@ ${i18n.t('settings.enableWhisperStt')}
         const modelSelectionHTML = html`
             <div class="model-selection-section">
                 <div class="model-select-group">
-                    <label>LLM Model: <strong>${getModelName('llm', this.selectedLlm) || i18n.t('settings.notSet')}</strong></label>
+                    <label>LLM Model: <strong>${getModelName('llm', this.selectedLlm) || t('settings.notSet')}</strong></label>
                     <button class="settings-button full-width" @click=${() => this.toggleModelList('llm')} ?disabled=${this.saving || this.availableLlmModels.length === 0}>
-${i18n.t('settings.changeLlmModel')}
+${t('settings.changeLlmModel')}
                     </button>
                     ${this.isLlmListVisible ? html`
                         <div class="model-list">
                             ${this.availableLlmModels.map(model => {
-                                const isOllama = this.getProviderForModel('llm', model.id) === 'ollama';
-                                const ollamaModel = isOllama ? this.ollamaModels.find(m => m.name === model.id) : null;
+                                const isOllaMa = this.getProviderForModel('llm', model.id) === 'ollama';
+                                const ollaMaModel = isOllaMa ? this.ollamaModels.find(m => m.name === model.id) : null;
                                 const isInstalling = this.installingModels[model.id] !== undefined;
                                 const installProgress = this.installingModels[model.id] || 0;
                                 
@@ -1292,15 +1292,15 @@ ${i18n.t('settings.changeLlmModel')}
                                     <div class="model-item ${this.selectedLlm === model.id ? 'selected' : ''}" 
                                          @click=${() => this.selectModel('llm', model.id)}>
                                         <span>${model.name}</span>
-                                        ${isOllama ? html`
+                                        ${isOllaMa ? html`
                                             ${isInstalling ? html`
                                                 <div class="install-progress">
                                                     <div class="install-progress-bar" style="width: ${installProgress}%"></div>
                                 </div>
-                                            ` : ollamaModel?.installed ? html`
-                                                <span class="model-status installed">${i18n.t('settings.installed')}</span>
+                                            ` : ollaMaModel?.installed ? html`
+                                                <span class="model-status installed">${t('settings.installed')}</span>
                                             ` : html`
-                                                <span class="model-status not-installed">${i18n.t('settings.clickToInstall')}</span>
+                                                <span class="model-status not-installed">${t('settings.clickToInstall')}</span>
                                             `}
                                         ` : ''}
                                     </div>
@@ -1310,9 +1310,9 @@ ${i18n.t('settings.changeLlmModel')}
                     ` : ''}
                 </div>
                 <div class="model-select-group">
-                    <label>STT Model: <strong>${getModelName('stt', this.selectedStt) || i18n.t('settings.notSet')}</strong></label>
+                    <label>STT Model: <strong>${getModelName('stt', this.selectedStt) || t('settings.notSet')}</strong></label>
                     <button class="settings-button full-width" @click=${() => this.toggleModelList('stt')} ?disabled=${this.saving || this.availableSttModels.length === 0}>
-${i18n.t('settings.changeSttModel')}
+${t('settings.changeSttModel')}
                     </button>
                     ${this.isSttListVisible ? html`
                         <div class="model-list">
@@ -1334,9 +1334,9 @@ ${i18n.t('settings.changeSttModel')}
                                                     <div class="install-progress-bar" style="width: ${installProgress}%"></div>
                                                 </div>
                                             ` : whisperModel?.installed ? html`
-                                                <span class="model-status installed">${i18n.t('settings.installed')}</span>
+                                                <span class="model-status installed">${t('settings.installed')}</span>
                                             ` : html`
-                                                <span class="model-status not-installed">${i18n.t('settings.notInstalled')}</span>
+                                                <span class="model-status not-installed">${t('settings.notInstalled')}</span>
                                             `}
                                         ` : ''}
                                     </div>
@@ -1352,15 +1352,15 @@ ${i18n.t('settings.changeSttModel')}
             <div class="settings-container">
                 <div class="header-section">
                     <div>
-                        <h1 class="app-title">${i18n.t('app.title')}</h1>
+                        <h1 class="app-title">${t('app.title')}</h1>
                         <div class="account-info">
                             ${this.firebaseUser
-                                ? html`${i18n.t('settings.account')}: ${this.firebaseUser.email || i18n.t('settings.loggedIn')}`
-                                : `${i18n.t('settings.account')}: ${i18n.t('settings.notLoggedIn')}`
+                                ? html`${t('settings.account')}: ${this.firebaseUser.email || t('settings.loggedIn')}`
+                                : `${t('settings.account')}: ${t('settings.notLoggedIn')}`
                             }
                         </div>
                     </div>
-                    <div class="invisibility-icon ${this.isContentProtectionOn ? 'visible' : ''}" title="${i18n.t('settings.invisibilityOn')}">
+                    <div class="invisibility-icon ${this.isContentProtectionOn ? 'visible' : ''}" title="${t('settings.invisibilityOn')}">
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M9.785 7.41787C8.7 7.41787 7.79 8.19371 7.55667 9.22621C7.0025 8.98704 6.495 9.05121 6.11 9.22037C5.87083 8.18204 4.96083 7.41787 3.88167 7.41787C2.61583 7.41787 1.58333 8.46204 1.58333 9.75121C1.58333 11.0404 2.61583 12.0845 3.88167 12.0845C5.08333 12.0845 6.06333 11.1395 6.15667 9.93787C6.355 9.79787 6.87417 9.53537 7.51 9.94954C7.615 11.1454 8.58333 12.0845 9.785 12.0845C11.0508 12.0845 12.0833 11.0404 12.0833 9.75121C12.0833 8.46204 11.0508 7.41787 9.785 7.41787ZM3.88167 11.4195C2.97167 11.4195 2.2425 10.6729 2.2425 9.75121C2.2425 8.82954 2.9775 8.08287 3.88167 8.08287C4.79167 8.08287 5.52083 8.82954 5.52083 9.75121C5.52083 10.6729 4.79167 11.4195 3.88167 11.4195ZM9.785 11.4195C8.875 11.4195 8.14583 10.6729 8.14583 9.75121C8.14583 8.82954 8.875 8.08287 9.785 8.08287C10.695 8.08287 11.43 8.82954 11.43 9.75121C11.43 10.6729 10.6892 11.4195 9.785 11.4195ZM12.6667 5.95954H1V6.83454H12.6667V5.95954ZM8.8925 1.36871C8.76417 1.08287 8.4375 0.931207 8.12833 1.03037L6.83333 1.46204L5.5325 1.03037L5.50333 1.02454C5.19417 0.93704 4.8675 1.10037 4.75083 1.39787L3.33333 5.08454H10.3333L8.91 1.39787L8.8925 1.36871Z" fill="white"/>
                         </svg>
@@ -1372,7 +1372,7 @@ ${i18n.t('settings.changeSttModel')}
 
                 <div class="buttons-section" style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 6px; margin-top: 6px;">
                     <button class="settings-button full-width" @click=${this.openShortcutEditor}>
-${i18n.t('settings.editShortcuts')}
+${t('settings.editShortcuts')}
                     </button>
                 </div>
 
@@ -1391,7 +1391,7 @@ ${i18n.t('settings.editShortcuts')}
                 <div class="preset-section">
                     <div class="preset-header">
                         <span class="preset-title">
-${i18n.t('settings.myPresets')}
+${t('settings.myPresets')}
                             <span class="preset-count">(${this.presets.filter(p => p.is_default === 0).length})</span>
                         </span>
                         <span class="preset-toggle" @click=${this.togglePresets}>
@@ -1402,16 +1402,16 @@ ${i18n.t('settings.myPresets')}
                     <div class="preset-list ${this.showPresets ? '' : 'hidden'}">
                         ${this.presets.filter(p => p.is_default === 0).length === 0 ? html`
                             <div class="no-presets-message">
-${i18n.t('settings.noCustomPresets')}<br>
+${t('settings.noCustomPresets')}<br>
                                 <span class="web-link" @click=${this.handlePersonalize}>
-                                    ${i18n.t('settings.createFirstPreset')}
+                                    ${t('settings.createFirstPreset')}
                                 </span>
                             </div>
                         ` : this.presets.filter(p => p.is_default === 0).map(preset => html`
                             <div class="preset-item ${this.selectedPreset?.id === preset.id ? 'selected' : ''}"
                                  @click=${() => this.handlePresetSelect(preset)}>
                                 <span class="preset-name">${preset.title}</span>
-                                ${this.selectedPreset?.id === preset.id ? html`<span class="preset-status">${i18n.t('settings.selected')}</span>` : ''}
+                                ${this.selectedPreset?.id === preset.id ? html`<span class="preset-status">${t('settings.selected')}</span>` : ''}
                             </div>
                         `)}
                     </div>
@@ -1419,40 +1419,40 @@ ${i18n.t('settings.noCustomPresets')}<br>
 
                 <div class="buttons-section">
                     <button class="settings-button full-width" @click=${this.handlePersonalize}>
-<span>${i18n.t('settings.personalizeMeetingNotes')}</span>
+<span>${t('settings.personalizeMeetingNotes')}</span>
                     </button>
                     <button class="settings-button full-width" @click=${this.handleToggleAutoUpdate} ?disabled=${this.autoUpdateLoading}>
-<span>${i18n.t('settings.automaticUpdates')}: ${this.autoUpdateEnabled ? i18n.t('settings.on') : i18n.t('settings.off')}</span>
+<span>${t('settings.automaticUpdates')}: ${this.autoUpdateEnabled ? t('settings.on') : t('settings.off')}</span>
                     </button>
                     
                     <div class="move-buttons">
                         <button class="settings-button half-width" @click=${this.handleMoveLeft}>
-<span>← ${i18n.t('settings.move')}</span>
+<span>← ${t('settings.move')}</span>
                         </button>
                         <button class="settings-button half-width" @click=${this.handleMoveRight}>
-<span>${i18n.t('settings.move')} →</span>
+<span>${t('settings.move')} →</span>
                         </button>
                     </div>
                     
                     <button class="settings-button full-width" @click=${this.handleToggleInvisibility}>
-<span>${this.isContentProtectionOn ? i18n.t('settings.disableInvisibility') : i18n.t('settings.enableInvisibility')}</span>
+<span>${this.isContentProtectionOn ? t('settings.disableInvisibility') : t('settings.enableInvisibility')}</span>
                     </button>
                     
                     <div class="bottom-buttons">
                         ${this.firebaseUser
                             ? html`
                                 <button class="settings-button half-width danger" @click=${this.handleFirebaseLogout}>
-<span>${i18n.t('settings.logout')}</span>
+<span>${t('settings.logout')}</span>
                                 </button>
                                 `
                             : html`
                                 <button class="settings-button half-width" @click=${this.handleUsePicklesKey}>
-<span>${i18n.t('settings.login')}</span>
+<span>${t('settings.login')}</span>
                                 </button>
                                 `
                         }
                         <button class="settings-button half-width danger" @click=${this.handleQuit}>
-<span>${i18n.t('settings.quit')}</span>
+<span>${t('settings.quit')}</span>
                         </button>
                     </div>
                 </div>
@@ -1463,3 +1463,4 @@ ${i18n.t('settings.noCustomPresets')}<br>
 }
 
 customElements.define('settings-view', SettingsView);
+
