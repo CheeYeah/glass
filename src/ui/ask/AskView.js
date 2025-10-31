@@ -1,8 +1,9 @@
 import { html, css, LitElement } from '../../ui/assets/lit-core-2.7.4.min.js';
 import { parser, parser_write, parser_end, default_renderer } from '../../ui/assets/smd.js';
-import { i18n } from '../../utils/i18n.js';
+import { t } from '../../utils/useTranslation.js';
+import { i18nLitMixin } from '../../utils/i18nLitMixin.js';
 
-export class AskView extends LitElement {
+export class AskView extends i18nLitMixin(LitElement) {
     static properties = {
         currentResponse: { type: String },
         currentQuestion: { type: String },

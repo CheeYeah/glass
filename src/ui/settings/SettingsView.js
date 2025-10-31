@@ -1,8 +1,9 @@
 import { html, css, LitElement } from '../assets/lit-core-2.7.4.min.js';
 import { t, changeLanguage } from '../../utils/useTranslation.js';
+import { i18nLitMixin } from '../../utils/i18nLitMixin.js';
 // import { getOllaProgressTracker } from '../../features/common/services/localProgressTracker.js'; // 제거됨
 
-export class SettingsView extends LitElement {
+export class SettingsView extends i18nLitMixin(LitElement) {
     static styles = css`
         * {
             font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -512,11 +513,15 @@ export class SettingsView extends LitElement {
 
     handleLanguageChange(event) {
         const language = event.target.value;
-        changeLanguage(language);
-        // 提示用户重启应用以应用语言变更
-        if (confirm(t('settings.languageChangeRestartHint'))) {
-            // 这里可以添加重启应用的逻辑
-        }
+        changeLanguage(language).then(() => {
+            // 语言更改成功后，强制更新所有使用翻译的UI元素
+            this.requestUpdate(); // 触发组件重新渲染
+            
+            // 通知应用其他部分语言已更改
+            window.dispatchEvent(new CustomEvent('languageChanged', { detail: { language } }));
+        }).catch(error => {
+            console.error('Failed to change language:', error);
+        });
     }
     static properties = {
         shortcuts: { type: Object, state: true },

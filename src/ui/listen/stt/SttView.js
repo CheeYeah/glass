@@ -1,7 +1,8 @@
 import { html, css, LitElement } from '../../assets/lit-core-2.7.4.min.js';
 import { t } from '../../../utils/useTranslation.js';
+import { i18nLitMixin } from '../../../utils/i18nLitMixin.js';
 
-export class SttView extends LitElement {
+export class SttView extends i18nLitMixin(LitElement) {
     static styles = css`
         :host {
             display: block;

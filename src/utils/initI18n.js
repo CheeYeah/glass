@@ -1,5 +1,5 @@
 // i18n初始化入口文件
-import { initI18next } from './i18nextConfig';
+import { initI18next, i18nEventEmitter } from './i18nextConfig';
 
 // 全局i18n初始化状态
 let i18nInitialized = false;
@@ -21,6 +21,13 @@ export const initializeI18n = async () => {
     const i18next = await i18nInitPromise;
     i18nInitialized = true;
     console.log('i18next initialized successfully with language:', i18next.language);
+    
+    // 确保在初始化完成后，i18next的languageChanged事件能正确触发自定义事件
+    i18next.on('languageChanged', (lng) => {
+      console.log('i18next language changed to:', lng);
+      i18nEventEmitter.emit('languageChanged', lng);
+    });
+    
     return i18next;
   } catch (error) {
     console.error('Failed to initialize i18next:', error);

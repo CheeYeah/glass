@@ -1,5 +1,6 @@
 import { html, css, LitElement } from '../../ui/assets/lit-core-2.7.4.min.js';
 import { t } from '../../utils/useTranslation.js';
+import { i18nLitMixin } from '../../utils/i18nLitMixin.js';
 
 const commonSystemShortcuts = new Set([
     'Cmd+Q', 'Cmd+W', 'Cmd+A', 'Cmd+S', 'Cmd+Z', 'Cmd+X', 'Cmd+C', 'Cmd+V', 'Cmd+P', 'Cmd+F', 'Cmd+G', 'Cmd+H', 'Cmd+M', 'Cmd+N', 'Cmd+O', 'Cmd+T',
@@ -8,7 +9,7 @@ const commonSystemShortcuts = new Set([
 
 // 使用i18next进行翻译，不再需要硬编码的映射
 
-export class ShortcutSettingsView extends LitElement {
+export class ShortcutSettingsView extends i18nLitMixin(LitElement) {
     static styles = css`
         * { font-family:'Helvetica Neue',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
             cursor:default; user-select:none; box-sizing:border-box; }

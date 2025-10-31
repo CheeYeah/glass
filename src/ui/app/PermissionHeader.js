@@ -1,7 +1,8 @@
 import { LitElement, html, css } from '../assets/lit-core-2.7.4.min.js';
+import { i18nLitMixin } from '../../utils/i18nLitMixin.js';
 import { t } from '../../utils/useTranslation.js';
 
-export class PermissionHeader extends LitElement {
+export class PermissionHeader extends i18nLitMixin(LitElement) {
     static styles = css`
         :host {
             display: block;

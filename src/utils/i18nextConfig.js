@@ -2,8 +2,13 @@ import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import Store from 'electron-store';
+import { EventEmitter } from 'events';
 
 const store = new Store();
+
+// 创建事件发射器用于语言变化通知
+export const i18nEventEmitter = new EventEmitter();
+i18nEventEmitter.setMaxListeners(100); // 增加监听器上限以避免警告
 
 // 定义所有支持的命名空间
 const supportedNamespaces = [
@@ -71,6 +76,10 @@ export const initI18next = async () => {
 export const changeLanguage = async (language) => {
   await i18next.changeLanguage(language);
   store.set('appLanguage', language);
+  
+  // 发射语言变化事件
+  i18nEventEmitter.emit('languageChanged', language);
+  
   // 返回更新后的i18next实例
   return i18next;
 };

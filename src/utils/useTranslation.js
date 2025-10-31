@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import i18next from './i18nextConfig';
-import { changeLanguage, getCurrentLanguage } from './i18nextConfig';
+import { changeLanguage, getCurrentLanguage, i18nEventEmitter } from './i18nextConfig';
 
 // 通用翻译函数
 export const t = (key, options = {}) => {
@@ -30,9 +30,17 @@ export const useTranslation = (namespaces = 'common') => {
     // 初始检查
     updateLanguage();
 
-    // 监听语言变化事件
-    const unsubscribe = i18next.on('languageChanged', updateLanguage);
-    return () => unsubscribe();
+    // 同时监听i18next内置事件和我们的自定义事件
+    const i18nextListener = i18next.on('languageChanged', updateLanguage);
+    const customListener = () => updateLanguage();
+    
+    i18nEventEmitter.on('languageChanged', customListener);
+    
+    // 清理函数
+    return () => {
+      i18nextListener(); // 移除i18next事件监听
+      i18nEventEmitter.removeListener('languageChanged', customListener); // 移除自定义事件监听
+    };
   }, []);
 
   const t = useCallback((key, options = {}) => {
