@@ -15,11 +15,11 @@
 - [x] 安装i18next核心依赖：
   - `i18next` - 核心国际化框架
   - `i18next-browser-languagedetector` - 浏览器语言检测插件
-- [ ] 安装其他必要插件：
+- [x] 安装其他必要插件：
   - `i18next-resources-to-backend` - 资源加载插件
   - `electron-store` - 用于持久化语言设置
-- [ ] 创建新的i18next配置文件
-- [ ] 设计资源文件结构和命名规范
+- [x] 创建新的i18next配置文件
+- [x] 设计资源文件结构和命名规范
 
 **技术实现**：
 
@@ -245,22 +245,25 @@ const LanguageSelector = () => {
 ## 已完成工作
 
 - [x] 切换到Node.js v20版本
-- [x] 安装i18next核心依赖
-- [x] 安装i18next-resources-to-backend、electron-store依赖
+- [x] 安装i18next核心依赖（i18next, i18next-browser-languagedetector）
+- [x] 安装其他必要插件（i18next-resources-to-backend、electron-store）
 - [x] 创建i18next核心配置文件
 - [x] 创建useTranslation工具函数
+- [x] 创建initI18n初始化入口文件
+- [x] 设计并创建资源文件目录结构（en和zh-CN语言，多个命名空间）
 
 ## 当前进度
 
-- **整体进度**：15%
-- **下一阶段**：完成阶段一剩余任务，开始阶段二的资源迁移
+- **整体进度**：30%
+- **已完成**：阶段一（环境准备与基础配置）
+- **下一阶段**：阶段二（语言资源迁移）
 
 ## 下一步行动
 
-1. 安装剩余必要依赖
-2. 创建i18next配置文件
-3. 开始语言资源迁移
-4. 更新组件以使用新API
+1. 分析现有语言资源内容
+2. 完成阶段二的语言资源迁移任务
+3. 开始准备阶段三的API适配工作
+4. 更新组件以使用新的翻译API
 
 ## 时间估算
 

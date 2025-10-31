@@ -1,4 +1,4 @@
-# CodeBuddy - Glass 项目开发指南
+# TRAE - Glass 项目开发指南
 
 ## 项目概述
 
@@ -10,6 +10,7 @@ Glass 是一个基于 Electron 的桌面 AI 助手应用，提供实时语音转
 - 🔒 本地优先，支持离线使用
 - ☁️ 云端同步（Firebase）
 - 🖥️ 跨平台支持（Windows、macOS）
+- 🌐 多语言国际化支持（基于i18next）
 
 ## 项目架构
 
@@ -20,7 +21,9 @@ e:\develop\glass\
 │   ├── features/           # 功能模块
 │   ├── bridge/             # 进程间通信桥接
 │   ├── window/             # 窗口管理
-│   └── ui/                 # 
+│   ├── ui/                 # UI组件
+│   ├── locales/            # 国际化语言资源
+│   └── utils/              # 工具函数（含i18n配置）
 
 ├── pickleglass_web/        # Next.js Web 仪表板
 ├── functions/             # Firebase Cloud Functions
@@ -43,6 +46,12 @@ e:\develop\glass\
 #### 3. AI 提供商抽象
 - 支持多种 AI 模型（OpenAI、Gemini、Claude、DeepSeek、本地 Ollama）
 - 工厂模式实现，易于扩展新提供商
+
+#### 4. 国际化架构
+- 基于i18next的翻译系统
+- 支持多语言切换（英文、中文）
+- 命名空间隔离的翻译资源
+- 语言偏好持久化存储
 
 ## 开发环境配置
 
@@ -157,10 +166,27 @@ npm run lint:fix          # 自动修复 ESLint 问题
 - API 密钥管理
 - 模型配置
 
+**关键文件：**
+- `src/features/settings/` - 主服务
+- `src/features/settings/repositories/` - 数据存储
+
+### 国际化模块
+**关键文件：**
+- `src/utils/i18nextConfig.js` - i18next核心配置
+- `src/utils/initI18n.js` - 初始化入口
+- `src/utils/useTranslation.js` - 翻译工具函数
+- `src/locales/` - 语言资源文件目录
+
 ### 4. 窗口管理 (Window Management)
 - 多窗口协调
 - 平滑移动动画
 - 布局管理
+
+### 5. 国际化 (Internationalization)
+- 语言资源管理
+- 动态语言切换
+- 命名空间化的翻译内容
+- 自动语言检测
 
 ## 数据库设计
 
@@ -205,6 +231,25 @@ git commit -m "feat: 添加新功能"
 
 # 5. 推送并创建 PR
 git push origin feat/your-feature
+```
+
+### 2. 国际化开发流程
+
+**添加新文本：**
+1. 在组件中使用 `t()` 函数标记需要翻译的文本
+2. 在对应的语言文件中添加翻译键值对
+3. 确保为所有支持的语言（en、zh-CN）提供翻译
+
+**示例：**
+```javascript
+// 组件中使用
+import { t } from '../../utils/useTranslation';
+
+// 使用翻译
+const title = t('common.title');
+
+// 带参数的翻译
+const greeting = t('common.greeting', { name: userName });
 ```
 
 ### 2. 调试技巧
@@ -289,6 +334,7 @@ npm install
 - [设计模式指南](./docs/DESIGN_PATTERNS.md)
 - [重构计划](./docs/refactor-plan.md)
 - [贡献指南](./CONTRIBUTING.md)
+- [国际化实施计划](./i18n-implementation-plan.md)
 
 ### 外部资源
 - [Electron 文档](https://www.electronjs.org/docs)
@@ -297,7 +343,7 @@ npm install
 
 ---
 
-**最后更新：** 2025-10-31  
+**最后更新：** 2025-11-01  
 **维护者：** Pickle Team  
 **项目状态：** 活跃开发中
 
