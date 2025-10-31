@@ -1,0 +1,9 @@
+---
+description: 
+alwaysApply: true
+enabled: true
+updatedAt: 2025-10-31T01:58:40.795Z
+provider: 
+---
+
+启动测试时必须先使用nvm use 20 切换到20版本的node
