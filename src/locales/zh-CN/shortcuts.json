@@ -1,0 +1,20 @@
+{
+  "title": "编辑快捷键",
+  "loading": "加载快捷键中...",
+  "close": "关闭",
+  "cancel": "取消",
+  "resetToDefault": "重置为默认值",
+  "save": "保存",
+  "edit": "编辑",
+  "disable": "禁用",
+  "shortcutSet": "快捷键已设置",
+  "shortcutDisabled": "快捷键已禁用",
+  "invalidShortcut": "无效快捷键：需要修饰键",
+  "invalidShortcutMaxKeys": "无效快捷键：最多4个键",
+  "invalidShortcutSystemReserved": "无效快捷键：系统保留",
+  "pressNewShortcut": "按下新快捷键…",
+  "clickToEdit": "点击编辑",
+  "resetConfirmation": "您确定要将所有快捷键重置为默认值吗？",
+  "failedToSave": "保存快捷键失败：",
+  "failedToLoadDefaults": "加载默认设置失败。"
+}

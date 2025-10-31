@@ -171,11 +171,19 @@ npm run lint:fix          # 自动修复 ESLint 问题
 - `src/features/settings/repositories/` - 数据存储
 
 ### 国际化模块
-**关键文件：**
-- `src/utils/i18nextConfig.js` - i18next核心配置
-- `src/utils/initI18n.js` - 初始化入口
-- `src/utils/useTranslation.js` - 翻译工具函数
-- `src/locales/` - 语言资源文件目录
+
+国际化模块基于 i18next 框架实现，支持多语言切换和动态资源加载。
+
+#### 关键文件
+
+- **src/utils/i18nextConfig.js**: i18next 核心配置，包含语言检测、资源加载策略
+- **src/utils/initI18n.js**: 初始化入口，提供异步初始化和预加载功能
+- **src/utils/useTranslation.js**: 自定义 Hook，简化组件中的翻译使用
+- **src/locales/**: 语言资源目录，按语言和命名空间组织
+  - **src/locales/en/**: 英文翻译资源（按命名空间分离）
+  - **src/locales/zh-CN/**: 中文翻译资源（按命名空间分离）
+
+> 注意：已移除根目录下的 en.json 和 zh-CN.json 文件，改为使用按语言和命名空间组织的文件结构。
 
 ### 4. 窗口管理 (Window Management)
 - 多窗口协调
@@ -183,10 +191,12 @@ npm run lint:fix          # 自动修复 ESLint 问题
 - 布局管理
 
 ### 5. 国际化 (Internationalization)
-- 语言资源管理
-- 动态语言切换
-- 命名空间化的翻译内容
+- 基于i18next的完整翻译系统
+- 命名空间化的翻译内容管理
+- 支持英文和中文双语言
+- 动态语言切换功能
 - 自动语言检测
+- 语言偏好持久化存储
 
 ## 数据库设计
 
@@ -237,8 +247,21 @@ git push origin feat/your-feature
 
 **添加新文本：**
 1. 在组件中使用 `t()` 函数标记需要翻译的文本
-2. 在对应的语言文件中添加翻译键值对
+2. 在对应的命名空间语言文件中添加翻译键值对
 3. 确保为所有支持的语言（en、zh-CN）提供翻译
+
+**命名空间说明：**
+- common - 通用组件和功能的翻译
+- app - 应用主界面翻译
+- ask - 问答功能相关翻译
+- listen - 语音转录功能相关翻译
+- settings - 设置页面相关翻译
+- shortcuts - 快捷键配置相关翻译
+- welcome - 欢迎页面相关翻译
+- permission - 权限设置相关翻译
+- apiKey - API密钥配置相关翻译
+- stt - 语音识别相关翻译
+- summary - 摘要功能相关翻译
 
 **示例：**
 ```javascript
@@ -343,7 +366,7 @@ npm install
 
 ---
 
-**最后更新：** 2025-11-01  
+**最后更新：** 2025-11-03  
 **维护者：** Pickle Team  
 **项目状态：** 活跃开发中
 
