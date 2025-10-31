@@ -40,7 +40,7 @@ e:\develop\glass\
 - **自动切换**: 根据用户登录状态自动选择数据源
 
 #### 3. AI 提供商抽象
-- 支持多种 AI 模型（OpenAI、Gemini、Claude、本地 Ollama）
+- 支持多种 AI 模型（OpenAI、Gemini、Claude、DeepSeek、本地 Ollama）
 - 工厂模式实现，易于扩展新提供商
 
 ## 开发环境配置
@@ -144,7 +144,7 @@ npm run lint:fix          # 自动修复 ESLint 问题
 
 ### 2. AI 问答 (Ask Feature)
 - 上下文感知的 AI 交互
-- 多模型支持（OpenAI、Gemini、Claude、Ollama）
+- 多模型支持（OpenAI、Gemini、Claude、DeepSeek、Ollama）
 - 会话历史管理
 
 **关键文件：**

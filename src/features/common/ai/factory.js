@@ -93,6 +93,15 @@ const PROVIDERS = {
           { id: 'whisper-medium', name: 'Whisper Medium (769M)' },
       ],
   },
+  'deepseek': {
+      name: 'DeepSeek',
+      handler: () => require("./providers/deepseek"),
+      llmModels: [
+          { id: 'deepseek-chat', name: 'DeepSeek Chat' },
+          { id: 'deepseek-coder', name: 'DeepSeek Coder' },
+      ],
+      sttModels: [],
+  },
 };
 
 function sanitizeModelId(model) {
@@ -158,7 +167,8 @@ function getProviderClass(providerId) {
         'gemini': 'GeminiProvider',
         'deepgram': 'DeepgramProvider',
         'ollama': 'OllamaProvider',
-        'whisper': 'WhisperProvider'
+        'whisper': 'WhisperProvider',
+        'deepseek': 'DeepSeekProvider'
     };
     
     const className = classNameMap[actualProviderId];
