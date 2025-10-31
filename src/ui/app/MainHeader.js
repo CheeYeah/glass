@@ -1,4 +1,6 @@
 import { html, css, LitElement } from '../assets/lit-core-2.7.4.min.js';
+import { i18n } from '../../utils/i18n.js';
+import { i18n } from '../../utils/i18n.js';
 
 export class MainHeader extends LitElement {
     static properties = {
@@ -359,10 +361,10 @@ export class MainHeader extends LitElement {
 
     _getListenButtonText(status) {
         switch (status) {
-            case 'beforeSession': return 'Listen';
-            case 'inSession'   : return 'Stop';
-            case 'afterSession': return 'Done';
-            default            : return 'Listen';
+            case 'beforeSession': return i18n.t('header.listen');
+            case 'inSession'   : return i18n.t('header.stop');
+            case 'afterSession': return i18n.t('header.done');
+            default            : return i18n.t('header.listen');
         }
     }
 
@@ -644,7 +646,7 @@ export class MainHeader extends LitElement {
 
                 <div class="header-actions ask-action" @click=${() => this._handleAskClick()}>
                     <div class="action-text">
-                        <div class="action-text-content">Ask</div>
+                        <div class="action-text-content">${i18n.t('header.ask')}</div>
                     </div>
                     <div class="icon-container">
                         ${this.renderShortcut(this.shortcuts.nextStep)}

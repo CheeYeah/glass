@@ -1,4 +1,5 @@
 import { html, css, LitElement } from '../../ui/assets/lit-core-2.7.4.min.js';
+import { i18n } from '../../utils/i18n.js';
 
 const commonSystemShortcuts = new Set([
     'Cmd+Q', 'Cmd+W', 'Cmd+A', 'Cmd+S', 'Cmd+Z', 'Cmd+X', 'Cmd+C', 'Cmd+V', 'Cmd+P', 'Cmd+F', 'Cmd+G', 'Cmd+H', 'Cmd+M', 'Cmd+N', 'Cmd+O', 'Cmd+T',
@@ -174,7 +175,7 @@ export class ShortcutSettingsView extends LitElement {
         this.feedback = {};
         const result = await window.api.shortcutSettingsView.saveShortcuts(this.shortcuts);
         if (!result.success) {
-            alert('Failed to save shortcuts: ' + result.error);
+            alert(i18n.t('shortcuts.failedToSave') + result.error);
         }
     }
 
@@ -193,7 +194,7 @@ export class ShortcutSettingsView extends LitElement {
             const defaultShortcuts = await window.api.shortcutSettingsView.getDefaultShortcuts();
             this.shortcuts = defaultShortcuts;
         } catch (error) {
-            alert('Failed to load default settings.');
+            alert(i18n.t('shortcuts.failedToLoadDefault'));
         }
     }
 
@@ -207,12 +208,12 @@ export class ShortcutSettingsView extends LitElement {
 
     render(){
         if(this.isLoading){
-          return html`<div class="container"><div class="loading-state">Loading Shortcuts...</div></div>`;
+          return html`<div class="container"><div class="loading-state">${i18n.t('shortcuts.loading')}</div></div>`;
         }
         return html`
           <div class="container">
-            <button class="close-button" @click=${this.handleClose} title="Close">&times;</button>
-            <h1 class="title">Edit Shortcuts</h1>
+            <button class="close-button" @click=${this.handleClose} title="${i18n.t('shortcuts.close')}">&times;</button>
+            <h1 class="title">${i18n.t('shortcuts.title')}</h1>
     
             <div class="scroll-area">
               ${Object.keys(this.shortcuts).map(key=>html`
@@ -221,13 +222,13 @@ export class ShortcutSettingsView extends LitElement {
                     <span class="shortcut-name">${this.formatShortcutName(key)}</span>
     
                     <!-- Edit & Disable 버튼 -->
-                    <button class="action-btn" @click=${()=>this.startCapture(key)}>Edit</button>
-                    <button class="action-btn" @click=${()=>this.disableShortcut(key)}>Disable</button>
+                    <button class="action-btn" @click=${()=>this.startCapture(key)}>${i18n.t('shortcuts.edit')}</button>
+                    <button class="action-btn" @click=${()=>this.disableShortcut(key)}>${i18n.t('shortcuts.disable')}</button>
     
                     <input readonly
                       class="shortcut-input ${this.capturingKey===key?'capturing':''}"
                       .value=${this.shortcuts[key]||''}
-                      placeholder=${this.capturingKey===key?'Press new shortcut…':'Click to edit'}
+                      placeholder=${this.capturingKey===key?i18n.t('shortcuts.pressNewShortcut'):i18n.t('shortcuts.clickToEdit')}
                       @click=${()=>this.startCapture(key)}
                       @keydown=${e=>this.handleKeydown(e,key)}
                       @blur=${()=>this.stopCapture()}
@@ -244,9 +245,9 @@ export class ShortcutSettingsView extends LitElement {
             </div>
     
             <div class="actions">
-              <button class="settings-button" @click=${this.handleClose}>Cancel</button>
-              <button class="settings-button danger" @click=${this.handleResetToDefault}>Reset to Default</button>
-              <button class="settings-button primary" @click=${this.handleSave}>Save</button>
+              <button class="settings-button" @click=${this.handleClose}>${i18n.t('shortcuts.cancel')}</button>
+              <button class="settings-button danger" @click=${this.handleResetToDefault}>${i18n.t('shortcuts.resetToDefault')}</button>
+              <button class="settings-button primary" @click=${this.handleSave}>${i18n.t('shortcuts.save')}</button>
             </div>
           </div>
         `;

@@ -1,6 +1,7 @@
 import { html, css, LitElement } from '../assets/lit-core-2.7.4.min.js';
 import './stt/SttView.js';
 import './summary/SummaryView.js';
+import { i18n } from '../../utils/i18n.js';
 
 export class ListenView extends LitElement {
     static styles = css`
@@ -626,11 +627,11 @@ export class ListenView extends LitElement {
     render() {
         const displayText = this.isHovering
             ? this.viewMode === 'transcript'
-                ? 'Copy Transcript'
-                : 'Copy Glass Analysis'
+                ? i18n.t('listen.copyTranscript')
+                : i18n.t('listen.copyGlassAnalysis')
             : this.viewMode === 'insights'
-            ? `Live insights`
-            : `Glass is Listening ${this.elapsedTime}`;
+            ? i18n.t('listen.liveInsights')
+            : i18n.t('listen.glassListening', { time: this.elapsedTime });
 
         return html`
             <div class="assistant-container">
@@ -646,14 +647,14 @@ export class ListenView extends LitElement {
                                           <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
                                           <circle cx="12" cy="12" r="3" />
                                       </svg>
-                                      <span>Show Transcript</span>
+                                      <span>${i18n.t('listen.showTranscript')}</span>
                                   `
                                 : html`
                                       <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                           <path d="M9 11l3 3L22 4" />
                                           <path d="M22 12v7a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h11" />
                                       </svg>
-                                      <span>Show Insights</span>
+                                      <span>${i18n.t('listen.showInsights')}</span>
                                   `}
                         </button>
                         <button
