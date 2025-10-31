@@ -1,11 +1,7 @@
 {
   "title": "Edit Shortcuts",
   "loading": "Loading Shortcuts...",
-  "close": "Close",
-  "cancel": "Cancel",
   "resetToDefault": "Reset to Default",
-  "save": "Save",
-  "edit": "Edit",
   "disable": "Disable",
   "shortcutSet": "Shortcut set",
   "shortcutDisabled": "Shortcut disabled",
@@ -16,5 +12,7 @@
   "clickToEdit": "Click to edit",
   "resetConfirmation": "Are you sure you want to reset all shortcuts to their default values?",
   "failedToSave": "Failed to save shortcuts: ",
-  "failedToLoadDefaults": "Failed to load default settings."
+  "failedToLoadDefaults": "Failed to load default settings.",
+  "scrollUp": "Scroll Up Response",
+  "scrollDown": "Scroll Down Response"
 }

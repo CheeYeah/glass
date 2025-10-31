@@ -11,6 +11,7 @@
   "question": "问题",
   "answer": "回答",
   "copySuccess": "内容已复制到剪贴板",
+  "contentCopied": "内容已复制到剪贴板",
   "lineCopySuccess": "行内容已复制到剪贴板",
   "unsafeContent": "检测到不安全内容，复制被阻止",
   "copyFailed": "复制失败:",
@@ -31,5 +32,18 @@
   "markdownLibrariesLoaded": "AskView中Markdown库加载成功",
   "domPurifyLoaded": "AskView中DOMPurify加载成功",
   "errorSendingText": "发送文本错误:",
-  "unknownView": "未知视图"
+  "unknownView": "未知视图",
+  "askAnything": "询问任何问题",
+  "nextStep": "询问任何问题",
+  "moveUp": "向上移动窗口",
+  "moveDown": "向下移动窗口",
+  "scrollUpResponse": "向上滚动响应",
+  "scrollDownResponse": "向下滚动响应",
+  "toggleVisibility": "切换可见性",
+  "settings": "设置",
+  "about": "关于",
+  "privacyNotice": "Glass不收集您的个人数据 —",
+  "seeDetails": "查看详情",
+  "clear": "清空",
+  "showHide": "显示/隐藏"
 }

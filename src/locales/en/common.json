@@ -11,6 +11,7 @@
   "question": "Question",
   "answer": "Answer",
   "copySuccess": "Content copied to clipboard",
+  "contentCopied": "Content copied to clipboard",
   "lineCopySuccess": "Line copied to clipboard",
   "unsafeContent": "Unsafe content detected, copy blocked",
   "copyFailed": "Failed to copy:",
@@ -31,5 +32,18 @@
   "markdownLibrariesLoaded": "Markdown libraries loaded successfully in AskView",
   "domPurifyLoaded": "DOMPurify loaded successfully in AskView",
   "errorSendingText": "Error sending text:",
-  "unknownView": "Unknown view"
+  "unknownView": "Unknown view",
+  "askAnything": "Ask Anything",
+  "nextStep": "Ask Anything",
+  "moveUp": "Move Up Window",
+  "moveDown": "Move Down Window",
+  "scrollUpResponse": "Scroll Up Response",
+  "scrollDownResponse": "Scroll Down Response",
+  "toggleVisibility": "Toggle Visibility",
+  "settings": "Settings",
+  "about": "About",
+  "privacyNotice": "Glass does not collect your personal data —",
+  "seeDetails": "See details",
+  "clear": "Clear",
+  "showHide": "Show/Hide"
 }

@@ -5,7 +5,5 @@
   "openBrowserLogin": "打开浏览器登录",
   "personalApiKeys": "使用个人API密钥",
   "personalApiKeysDescription": "根据您的API使用情况可能产生费用<br/>不收集个人数据<br/>使用您自己的API密钥（OpenAI、Gemini等）",
-  "enterApiKey": "输入您的API密钥",
-  "privacyNotice": "Glass不收集您的个人数据 —",
-  "seeDetails": "查看详情"
+  "enterApiKey": "输入您的API密钥"
 }

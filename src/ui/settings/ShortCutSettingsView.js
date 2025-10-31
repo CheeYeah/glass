@@ -6,13 +6,7 @@ const commonSystemShortcuts = new Set([
     'Ctrl+Q', 'Ctrl+W', 'Ctrl+A', 'Ctrl+S', 'Ctrl+Z', 'Ctrl+X', 'Ctrl+C', 'Ctrl+V', 'Ctrl+P', 'Ctrl+F', 'Ctrl+G', 'Ctrl+H', 'Ctrl+M', 'Ctrl+N', 'Ctrl+O', 'Ctrl+T'
 ]);
 
-const displayNameMap = {
-    nextStep: 'Ask Anything',
-    moveUp: 'Move Up Window',
-    moveDown: 'Move Down Window',
-    scrollUp: 'Scroll Up Response',
-    scrollDown: 'Scroll Down Response',
-  };
+// 使用i18next进行翻译，不再需要硬编码的映射
 
 export class ShortcutSettingsView extends LitElement {
     static styles = css`
@@ -134,7 +128,7 @@ export class ShortcutSettingsView extends LitElement {
         }
         // 성공
         this.shortcuts = {...this.shortcuts, [shortcutKey]:accel};
-        this.feedback = {...this.feedback, [shortcutKey]:{type:'success',msg:'Shortcut set'}};
+        this.feedback = {...this.feedback, [shortcutKey]:{type:'success',msg:t('shortcuts.shortcutSet')}};
         this.stopCapture();
       }
     
@@ -187,7 +181,7 @@ export class ShortcutSettingsView extends LitElement {
 
     async handleResetToDefault() {
         if (!window.api) return;
-        const confirmation = confirm("Are you sure you want to reset all shortcuts to their default values?");
+        const confirmation = confirm(t('shortcuts.resetConfirmation'));
         if (!confirmation) return;
     
         try {
@@ -199,11 +193,15 @@ export class ShortcutSettingsView extends LitElement {
     }
 
     formatShortcutName(name) {
-        if (displayNameMap[name]) {
-            return displayNameMap[name];
+        // 尝试从翻译文件获取翻译，如果没有则使用默认格式化
+        const translationKey = `shortcuts.${name}`;
+        const translated = t(translationKey);
+        // 如果翻译返回的还是键名本身（说明没有对应的翻译），则使用默认格式化
+        if (translated === translationKey) {
+            const result = name.replace(/([A-Z])/g, " $1");
+            return result.charAt(0).toUpperCase() + result.slice(1);
         }
-        const result = name.replace(/([A-Z])/g, " $1");
-        return result.charAt(0).toUpperCase() + result.slice(1);
+        return translated;
     }
 
     render(){

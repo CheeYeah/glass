@@ -5,7 +5,5 @@
   "openBrowserLogin": "Open Browser to Log in",
   "personalApiKeys": "Use Personal API keys",
   "personalApiKeysDescription": "Costs may apply based on your API usage<br/>No personal data collected<br/>Use your own API keys (OpenAI, Gemini, etc.)",
-  "enterApiKey": "Enter Your API Key",
-  "privacyNotice": "Glass does not collect your personal data —",
-  "seeDetails": "See details"
+  "enterApiKey": "Enter Your API Key"
 }

@@ -1,5 +1,5 @@
 import { html, css, LitElement } from '../assets/lit-core-2.7.4.min.js';
-import { t } from '../../utils/useTranslation.js';
+import { t, changeLanguage } from '../../utils/useTranslation.js';
 // import { getOllaProgressTracker } from '../../features/common/services/localProgressTracker.js'; // 제거됨
 
 export class SettingsView extends LitElement {
@@ -196,8 +196,38 @@ export class SettingsView extends LitElement {
             transform: translateY(1px);
         }
 
-        .settings-button.full-width {
+        .settings-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .language-selector-section {
+            margin-top: 6px;
+            margin-bottom: 6px;
+        }
+
+        .language-select {
             width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            color: white;
+            padding: 5px 10px;
+            font-size: 11px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .language-select option {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .language-select:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
         }
 
         .settings-button.half-width {
@@ -480,7 +510,14 @@ export class SettingsView extends LitElement {
     `;
 
 
-    //////// after_modelStateService ////////
+    handleLanguageChange(event) {
+        const language = event.target.value;
+        changeLanguage(language);
+        // 提示用户重启应用以应用语言变更
+        if (confirm(t('settings.languageChangeRestartHint'))) {
+            // 这里可以添加重启应用的逻辑
+        }
+    }
     static properties = {
         shortcuts: { type: Object, state: true },
         firebaseUser: { type: Object, state: true },
@@ -1424,6 +1461,14 @@ ${t('settings.noCustomPresets')}<br>
                     <button class="settings-button full-width" @click=${this.handleToggleAutoUpdate} ?disabled=${this.autoUpdateLoading}>
 <span>${t('settings.automaticUpdates')}: ${this.autoUpdateEnabled ? t('settings.on') : t('settings.off')}</span>
                     </button>
+                    
+                    <div class="language-selector-section">
+                        <label class="settings-label">${t('settings.language')}</label>
+                        <select class="language-select" @change=${this.handleLanguageChange}>
+                            <option value="en">${t('languages.english')}</option>
+                            <option value="zh-CN">${t('languages.chinese')}</option>
+                        </select>
+                    </div>
                     
                     <div class="move-buttons">
                         <button class="settings-button half-width" @click=${this.handleMoveLeft}>

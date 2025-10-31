@@ -12,8 +12,5 @@
   "settingUp": "Setting up...",
   "installingModel": "Installing {{model}}...",
   "downloading": "Downloading...",
-  "confirm": "Confirm",
-  "getApiKeyFrom": "Get your API key from: OpenAI | Google | Anthropic",
-  "privacyNotice": "Glass does not collect your personal data —",
-  "seeDetails": "See details"
+  "getApiKeyFrom": "Get your API key from: OpenAI | Google | Anthropic"
 }

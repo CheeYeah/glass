@@ -12,8 +12,5 @@
   "settingUp": "正在设置...",
   "installingModel": "正在安装{{model}}...",
   "downloading": "正在下载...",
-  "confirm": "确认",
-  "getApiKeyFrom": "从以下获取API密钥：OpenAI | Google | Anthropic",
-  "privacyNotice": "Glass不收集您的个人数据 —",
-  "seeDetails": "查看详情"
+  "getApiKeyFrom": "从以下获取API密钥：OpenAI | Google | Anthropic"
 }
