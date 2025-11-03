@@ -10,11 +10,9 @@ export const t = (key, options = {}) => {
   try {
     // 确保命名空间是数组格式
     const ns = options.ns ? (Array.isArray(options.ns) ? options.ns : [options.ns]) : ['common'];
-    console.log(`Translating key '${key}' with namespace:`, ns);
     
     // 1. 首先尝试直接从预加载资源中查找（绕过i18next问题）
     const currentLang = i18next && i18next.isInitialized ? i18next.language : 'en';
-    console.log(`Attempting direct lookup in preloadedResources[${currentLang}]`);
     
     // 按优先级查找：先在指定命名空间，再在所有支持的命名空间
     const allNamespaces = [...ns, 'common', 'app', 'welcome'];
@@ -26,7 +24,6 @@ export const t = (key, options = {}) => {
           preloadedResources[currentLang][namespace] && 
           Object.prototype.hasOwnProperty.call(preloadedResources[currentLang][namespace], key)) {
         const directValue = preloadedResources[currentLang][namespace][key];
-        console.log(`Found direct translation in ${namespace}:`, directValue);
         return directValue;
       }
     }
@@ -36,14 +33,12 @@ export const t = (key, options = {}) => {
       const keyParts = key.split('.');
       if (keyParts.length === 2) {
         const [namespacePart, actualKey] = keyParts;
-        console.log(`Parsing key '${key}' as namespace '${namespacePart}' with key '${actualKey}'`);
         
         // 尝试在解析出的命名空间中查找
         if (preloadedResources[currentLang] && 
             preloadedResources[currentLang][namespacePart] && 
             Object.prototype.hasOwnProperty.call(preloadedResources[currentLang][namespacePart], actualKey)) {
           const directValue = preloadedResources[currentLang][namespacePart][actualKey];
-          console.log(`Found parsed translation in ${namespacePart}:`, directValue);
           return directValue;
         }
       }
@@ -51,10 +46,8 @@ export const t = (key, options = {}) => {
     
     // 2. 如果预加载资源中没找到，再尝试使用i18next（作为后备）
     if (i18next && i18next.isInitialized) {
-      console.log(`Fallback to i18next for key '${key}'`);
       const result = i18next.t(key, { ...options, ns });
       if (result !== key) {
-        console.log(`i18next translation found:`, result);
         return result;
       }
     }
@@ -68,9 +61,7 @@ export const t = (key, options = {}) => {
     );
     
     // 作为最后的应急措施，检查一下是否预加载资源结构有问题
-    console.log('Available preloaded resource languages:', Object.keys(preloadedResources));
     if (preloadedResources[currentLang]) {
-      console.log(`Namespaces available in ${currentLang}:`, Object.keys(preloadedResources[currentLang]));
       // 如果是app.title键，特别检查一下
       if (key === 'app.title') {
         console.log('Specific check for app.title in en/app namespace:', 
@@ -132,11 +123,9 @@ export const useTranslation = (namespaces = 'common') => {
         (Array.isArray(options.ns) ? options.ns : [options.ns]) : 
         nsArray;
       
-      console.log(`React hook translating key '${key}' with namespace:`, keyNamespaces);
       
       // 1. 首先尝试直接从预加载资源中查找（绕过i18next问题）
       const currentLang = i18next && i18next.isInitialized ? i18next.language : 'en';
-      console.log(`React hook attempting direct lookup in preloadedResources[${currentLang}]`);
       
       // 按优先级查找：先在指定命名空间，再在所有支持的命名空间
       const allNamespaces = [...keyNamespaces, 'common', 'app', 'welcome'];
@@ -148,7 +137,6 @@ export const useTranslation = (namespaces = 'common') => {
             preloadedResources[currentLang][namespace] && 
             Object.prototype.hasOwnProperty.call(preloadedResources[currentLang][namespace], key)) {
           const directValue = preloadedResources[currentLang][namespace][key];
-          console.log(`React hook found direct translation in ${namespace}:`, directValue);
           return directValue;
         }
       }
@@ -158,14 +146,12 @@ export const useTranslation = (namespaces = 'common') => {
         const keyParts = key.split('.');
         if (keyParts.length === 2) {
           const [namespacePart, actualKey] = keyParts;
-          console.log(`React hook parsing key '${key}' as namespace '${namespacePart}' with key '${actualKey}'`);
           
           // 尝试在解析出的命名空间中查找
           if (preloadedResources[currentLang] && 
               preloadedResources[currentLang][namespacePart] && 
               Object.prototype.hasOwnProperty.call(preloadedResources[currentLang][namespacePart], actualKey)) {
             const directValue = preloadedResources[currentLang][namespacePart][actualKey];
-            console.log(`React hook found parsed translation in ${namespacePart}:`, directValue);
             return directValue;
           }
         }
@@ -173,10 +159,8 @@ export const useTranslation = (namespaces = 'common') => {
       
       // 2. 如果预加载资源中没找到，再尝试使用i18next（作为后备）
       if (i18next && i18next.isInitialized) {
-        console.log(`Fallback to i18next for key '${key}'`);
         const result = i18next.t(key, { ...options, ns: keyNamespaces });
         if (result !== key) {
-          console.log(`i18next translation found:`, result);
           return result;
         }
       }
@@ -190,7 +174,6 @@ export const useTranslation = (namespaces = 'common') => {
       );
       
       // 作为最后的应急措施，检查一下是否预加载资源结构有问题
-      console.log('Available preloaded resource languages:', Object.keys(preloadedResources));
       if (preloadedResources[currentLang]) {
         console.log(`Namespaces available in ${currentLang}:`, Object.keys(preloadedResources[currentLang]));
       }
