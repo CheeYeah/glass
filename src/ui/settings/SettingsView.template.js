@@ -38,10 +38,10 @@ export function getSettingsTemplate(component) {
                 />
                 <div class="key-buttons">
                     <button class="settings-button" @click="${() => component.handleSaveKey('openai')}" ?disabled="${component.saving}">
-                        ${t('settings.save')}
+                        ${t('common.save')}
                     </button>
                     <button class="settings-button danger" @click="${() => component.handleClearKey('openai')}" ?disabled="${component.saving}">
-                        ${t('settings.clear')}
+                        ${t('common.clear')}
                     </button>
                 </div>
             </div>
@@ -57,10 +57,10 @@ export function getSettingsTemplate(component) {
                 />
                 <div class="key-buttons">
                     <button class="settings-button" @click="${() => component.handleSaveKey('gemini')}" ?disabled="${component.saving}">
-                        ${t('settings.save')}
+                        ${t('common.save')}
                     </button>
                     <button class="settings-button danger" @click="${() => component.handleClearKey('gemini')}" ?disabled="${component.saving}">
-                        ${t('settings.clear')}
+                        ${t('common.clear')}
                     </button>
                 </div>
             </div>
@@ -76,10 +76,10 @@ export function getSettingsTemplate(component) {
                 />
                 <div class="key-buttons">
                     <button class="settings-button" @click="${() => component.handleSaveKey('anthropic')}" ?disabled="${component.saving}">
-                        ${t('settings.save')}
+                        ${t('common.save')}
                     </button>
                     <button class="settings-button danger" @click="${() => component.handleClearKey('anthropic')}" ?disabled="${component.saving}">
-                        ${t('settings.clear')}
+                        ${t('common.clear')}
                     </button>
                 </div>
             </div>

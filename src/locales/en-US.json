@@ -1,33 +1,4 @@
 {
-  "apiKey": {
-    "back": "Back",
-    "usePersonalApiKeys": "Use Personal API keys",
-    "selectLlmProvider": "1. Select LLM Provider",
-    "enterApiKey": "2. Enter API Key",
-    "enterYourApiKey": "Enter your {{provider}} API key",
-    "selectSttProvider": "3. Select STT Provider",
-    "enterSttApiKey": "4. Enter STT API Key",
-    "sttNotSupportedByOllama": "STT not supported by Ollama",
-    "selectModel": "Select a model...",
-    "enterYourSttApiKey": "Enter your STT API key",
-    "settingUp": "Setting up...",
-    "installingModel": "Installing {{model}}...",
-    "downloading": "Downloading...",
-    "getApiKeyFrom": "Get your API key from: OpenAI | Google | Anthropic"
-  },
-  "app": {
-    "title": "Glass",
-    "description": "Cl*ely for Free",
-    "help": "Help"
-  },
-  "ask": {
-    "title": "Ask Glass",
-    "placeholder": "Ask me anything...",
-    "send": "Send",
-    "thinking": "Thinking...",
-    "analyzing": "analyzing screen...",
-    "noMessages": "No messages yet. Start a conversation!"
-  },
   "common": {
     "loading": "Loading...",
     "error": "Error",
@@ -76,6 +47,19 @@
     "seeDetails": "See details",
     "clear": "Clear",
     "showHide": "Show/Hide"
+  },
+  "app": {
+    "title": "Glass",
+    "description": "Cl*ely for Free",
+    "help": "Help"
+  },
+  "ask": {
+    "title": "Ask Glass",
+    "placeholder": "Ask me anything...",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "analyzing": "analyzing screen...",
+    "noMessages": "No messages yet. Start a conversation!"
   },
   "header": {
     "listen": "Listen",
@@ -173,7 +157,11 @@
     "failedToSave": "Failed to save shortcuts: ",
     "failedToLoadDefaults": "Failed to load default settings.",
     "scrollUp": "Scroll Up Response",
-    "scrollDown": "Scroll Down Response"
+    "scrollDown": "Scroll Down Response",
+    "toggleWindow": "Toggle Window",
+    "toggleInvisibility": "Toggle Invisibility",
+    "toggleRecording": "Toggle Recording",
+    "toggleTranscription": "Toggle Transcription"
   },
   "stt": {
     "waitingForSpeech": "Waiting for speech..."
@@ -190,5 +178,21 @@
     "personalApiKeys": "Use Personal API keys",
     "personalApiKeysDescription": "Costs may apply based on your API usage<br/>No personal data collected<br/>Use your own API keys (OpenAI, Gemini, etc.)",
     "enterApiKey": "Enter Your API Key"
+  },
+  "apiKey": {
+    "back": "Back",
+    "usePersonalApiKeys": "Use Personal API keys",
+    "selectLlmProvider": "1. Select LLM Provider",
+    "enterApiKey": "2. Enter API Key",
+    "enterYourApiKey": "Enter your {{provider}} API key",
+    "selectSttProvider": "3. Select STT Provider",
+    "enterSttApiKey": "4. Enter STT API Key",
+    "sttNotSupportedByOllama": "STT not supported by Ollama",
+    "selectModel": "Select a model...",
+    "enterYourSttApiKey": "Enter your STT API key",
+    "settingUp": "Setting up...",
+    "installingModel": "Installing {{model}}...",
+    "downloading": "Downloading...",
+    "getApiKeyFrom": "Get your API key from: OpenAI | Google | Anthropic"
   }
 }

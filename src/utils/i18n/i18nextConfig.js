@@ -1,22 +1,16 @@
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import resourcesToBackend from 'i18next-resources-to-backend';
 
 // 预加载关键翻译资源作为备用
-export const preloadedResources = {
-  en:  require('../../locales/en-US.json'),
-  'zh-CN': require('../../locales/zh-CN.json')
-};
+// 注意：这里需要正确的i18next资源格式
+const enResource = await import('../../locales/en-US.json', { assert: { type: 'json' } });
+const zhCNResource = await import('../../locales/zh-CN.json', { assert: { type: 'json' } });
 
-// 详细检查预加载资源内容
-console.log('Preloaded translation resources languages:', Object.keys(preloadedResources));
-console.log('Preloaded translation resources namespaces for en:', Object.keys(preloadedResources.en));
-// 检查app命名空间的具体内容
-console.log('Preloaded app namespace content:', preloadedResources.en.app);
-console.log('Preloaded app.title value:', preloadedResources.en.app.title);
-// 检查welcome命名空间的具体内容
-console.log('Preloaded welcome namespace content:', preloadedResources.en.welcome);
-console.log('Preloaded welcome.chooseConnection value:', preloadedResources.en.welcome.chooseConnection);
+// 正确的i18next资源格式：每个语言包含所有命名空间
+export const preloadedResources = {
+  en: enResource.default || enResource,
+  'zh-CN': zhCNResource.default || zhCNResource
+};
 
 // 自定义事件发射器，不依赖Node.js的EventEmitter
 class CustomEventEmitter {
@@ -93,9 +87,6 @@ export const initI18next = async () => {
   }, null, 2));
   
   // 验证关键翻译键是否存在
-  console.log('Verifying key existence - app.title:', 'title' in resources.en.app);
-  console.log('Verifying key existence - welcome.chooseConnection:', 'chooseConnection' in resources.en.welcome);
-  
   console.log('Starting i18next initialization with config:', JSON.stringify({
       lng: savedLanguage || 'en',
       fallbackLng: 'en',
@@ -106,40 +97,27 @@ export const initI18next = async () => {
     
     await i18next
         .use(LanguageDetector)
-        // 首先使用预加载的资源
+        // 使用预加载的资源
         .init({
             lng: savedLanguage || 'en',
             fallbackLng: 'en',
             supportedLngs: ['en', 'zh-CN'],
+            resources: resources,
             ns: supportedNamespaces,
             defaultNS: 'common',
-            fallbackNS: ['common'],
-            resources: resources, // 直接使用预加载的资源对象
             interpolation: {
               escapeValue: false,
             },
             detection: {
-              // 自定义语言检测选项
               order: ['localStorage', 'navigator'],
-              lookupLocalStorage: 'i18nextLng',
+              lookupLocalStorage: 'appLanguage',
               caches: ['localStorage'],
             },
-            // 确保所有需要的命名空间都被加载
-            load: 'currentOnly',
-            // 更宽松的回退策略
-            nonExplicitWhitelist: true,
-            debug: true, // 始终启用调试模式
-            // 立即执行初始化，不延迟
+            // 简化配置，避免复杂选项
+            debug: false, // 关闭调试模式
             initImmediate: true,
-            // 增加缓存控制
             compatibilityJSON: 'v3',
-            // 额外的错误处理选项
-            saveMissing: true,
-            // 禁用资源加载器，因为我们使用预加载的资源
-            // resourcesLoadPath: undefined,
-            // 强制资源加载完成后再返回
             returnEmptyString: false,
-            // 确保使用正确的资源格式
             react: {
               useSuspense: false
             }
@@ -164,14 +142,32 @@ export const initI18next = async () => {
 };
 
 export const changeLanguage = async (language) => {
-  await i18next.changeLanguage(language);
-  localStorage.setItem('appLanguage', language);
-  
-  // 发射语言变化事件
-  i18nEventEmitter.emit('languageChanged', language);
-  
-  // 返回更新后的i18next实例
-  return i18next;
+  try {
+    // 确保i18next已初始化
+    if (!i18next.isInitialized) {
+      console.warn('i18next not initialized, initializing now...');
+      await initI18next();
+    }
+
+    // 检查语言是否支持
+    const supportedLangs = ['en', 'zh-CN'];
+    if (!supportedLangs.includes(language)) {
+      console.warn(`Language '${language}' not supported, falling back to 'en'`);
+      language = 'en';
+    }
+
+    await i18next.changeLanguage(language);
+    localStorage.setItem('appLanguage', language);
+
+    // 发射语言变化事件
+    i18nEventEmitter.emit('languageChanged', language);
+
+    // 返回更新后的i18next实例
+    return i18next;
+  } catch (error) {
+    console.error('Error changing language:', error);
+    throw error;
+  }
 };
 
 // 获取当前语言

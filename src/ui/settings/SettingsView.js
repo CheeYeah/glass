@@ -115,7 +115,7 @@ export class SettingsView extends i18nLitMixin(LitElement) {
     async loadLocalAIStatus() {
         try {
             // Load OllaMa status
-            const ollaMaStatus = await window.api.settingsView.getOllaMaStatus();
+            const ollaMaStatus = await window.api.settingsView.getOllamaStatus();
             if (ollaMaStatus?.success) {
                 this.ollamaStatus = { installed: ollaMaStatus.installed, running: ollaMaStatus.running };
                 this.ollamaModels = ollaMaStatus.models || [];
@@ -147,19 +147,19 @@ export class SettingsView extends i18nLitMixin(LitElement) {
     async loadInitialData() {
         try {
             // Load shortcuts
-            const shortcutsResult = await window.api.settingsView.getShortcuts();
+            const shortcutsResult = await window.api.settingsView.getCurrentShortcuts();
             if (shortcutsResult?.success) {
                 this.shortcuts = shortcutsResult.shortcuts || {};
             }
             
             // Load user info
-            const userResult = await window.api.settingsView.getUserInfo();
+            const userResult = await window.api.settingsView.getCurrentUser();
             if (userResult?.success) {
                 this.firebaseUser = userResult.user || null;
             }
             
             // Load API keys
-            const keysResult = await window.api.settingsView.getApiKeys();
+            const keysResult = await window.api.settingsView.getAllKeys();
             if (keysResult?.success) {
                 this.apiKeys = keysResult.keys || { openai: '', gemini: '', anthropic: '', whisper: '' };
             }
@@ -208,10 +208,16 @@ export class SettingsView extends i18nLitMixin(LitElement) {
 
     async refreshModelData() {
         try {
-            const modelsResult = await window.api.settingsView.getAvailableModels();
-            if (modelsResult?.success) {
-                this.availableLlmModels = modelsResult.llm || [];
-                this.availableSttModels = modelsResult.stt || [];
+            // Get LLM models
+            const llmResult = await window.api.settingsView.getAvailableModels('llm');
+            // Get STT models
+            const sttResult = await window.api.settingsView.getAvailableModels('stt');
+
+            if (llmResult?.success) {
+                this.availableLlmModels = llmResult.models || [];
+            }
+            if (sttResult?.success) {
+                this.availableSttModels = sttResult.models || [];
             }
         } catch (error) {
             console.error('Error refreshing model data:', error);
@@ -257,7 +263,7 @@ export class SettingsView extends i18nLitMixin(LitElement) {
         this.requestUpdate();
         
         try {
-            const result = await window.api.settingsView.saveApiKey(provider, this.apiKeys[provider]);
+            const result = await window.api.settingsView.saveApiKey({ provider, apiKey: this.apiKeys[provider] });
             if (result?.success) {
                 console.log(`${provider} API key saved successfully`);
                 // Refresh model data after saving key
@@ -280,7 +286,7 @@ export class SettingsView extends i18nLitMixin(LitElement) {
         this.requestUpdate();
         
         try {
-            const result = await window.api.settingsView.clearApiKey(provider);
+            const result = await window.api.settingsView.removeApiKey(provider);
             if (result?.success) {
                 this.apiKeys[provider] = '';
                 console.log(`${provider} API key cleared successfully`);
@@ -315,7 +321,7 @@ export class SettingsView extends i18nLitMixin(LitElement) {
         this.requestUpdate();
         
         try {
-            const result = await window.api.settingsView.selectModel(type, modelId);
+            const result = await window.api.settingsView.setSelectedModel({ type, modelId });
             if (result?.success) {
                 if (type === 'llm') {
                     this.selectedLlm = modelId;
@@ -349,15 +355,12 @@ export class SettingsView extends i18nLitMixin(LitElement) {
 
     async handlePresetSelect(preset) {
         if (!window.api) return;
-        
+
         try {
-            const result = await window.api.settingsView.selectPreset(preset.id);
-            if (result?.success) {
-                this.selectedPreset = preset;
-                console.log('Preset selected:', preset.title);
-            } else {
-                console.error('Failed to select preset');
-            }
+            // Note: selectPreset function not found in preload.js, using placeholder
+            console.warn('selectPreset function not implemented in preload.js');
+            this.selectedPreset = preset;
+            console.log('Preset selected:', preset.title);
         } catch (error) {
             console.error('Error selecting preset:', error);
         }
@@ -366,19 +369,19 @@ export class SettingsView extends i18nLitMixin(LitElement) {
 
     handlePersonalize() {
         if (window.api) {
-            window.api.settingsView.openPersonalize();
+            window.api.settingsView.openPersonalizePage();
         }
     }
 
     async handleMoveLeft() {
         if (window.api) {
-            await window.api.settingsView.moveWindow('left');
+            await window.api.settingsView.moveWindowStep('left');
         }
     }
 
     async handleMoveRight() {
         if (window.api) {
-            await window.api.settingsView.moveWindow('right');
+            await window.api.settingsView.moveWindowStep('right');
         }
     }
 
@@ -418,9 +421,9 @@ export class SettingsView extends i18nLitMixin(LitElement) {
 
     async handleUsePicklesKey() {
         if (!window.api) return;
-        
+
         try {
-            const result = await window.api.settingsView.usePicklesKey();
+            const result = await window.api.settingsView.startFirebaseAuth();
             if (result?.success) {
                 console.log('Pickles key authentication initiated');
             } else {
@@ -433,7 +436,7 @@ export class SettingsView extends i18nLitMixin(LitElement) {
 
     async handleQuit() {
         if (window.api) {
-            await window.api.settingsView.quitApp();
+            await window.api.settingsView.quitApplication();
         }
     }
 

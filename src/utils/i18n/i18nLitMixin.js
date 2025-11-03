@@ -1,4 +1,3 @@
-// src/utils/i18nLitMixin.js
 import { i18nEventEmitter } from './i18nextConfig';
 import i18next from './i18nextConfig';
 

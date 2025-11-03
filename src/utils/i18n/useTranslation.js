@@ -13,32 +13,48 @@ export const t = (key, options = {}) => {
     
     // 1. 首先尝试直接从预加载资源中查找（绕过i18next问题）
     const currentLang = i18next && i18next.isInitialized ? i18next.language : 'en';
-    
+
     // 按优先级查找：先在指定命名空间，再在所有支持的命名空间
     const allNamespaces = [...ns, 'common', 'app', 'welcome'];
     const uniqueNamespaces = [...new Set(allNamespaces)]; // 去重
-    
+
     // 首先尝试直接查找键名（支持app.title格式）
     for (const namespace of uniqueNamespaces) {
-      if (preloadedResources[currentLang] && 
-          preloadedResources[currentLang][namespace] && 
+      if (preloadedResources[currentLang] &&
+          preloadedResources[currentLang][namespace] &&
           Object.prototype.hasOwnProperty.call(preloadedResources[currentLang][namespace], key)) {
         const directValue = preloadedResources[currentLang][namespace][key];
         return directValue;
       }
     }
     
-    // 如果直接查找失败，尝试解析键名（支持app.title格式）
+    // 如果直接查找失败，尝试解析键名（支持app.title格式和嵌套键）
     if (key.includes('.')) {
       const keyParts = key.split('.');
+
+      // 支持两层结构：namespace.key
       if (keyParts.length === 2) {
         const [namespacePart, actualKey] = keyParts;
-        
+
         // 尝试在解析出的命名空间中查找
-        if (preloadedResources[currentLang] && 
-            preloadedResources[currentLang][namespacePart] && 
+        if (preloadedResources[currentLang] &&
+            preloadedResources[currentLang][namespacePart] &&
             Object.prototype.hasOwnProperty.call(preloadedResources[currentLang][namespacePart], actualKey)) {
           const directValue = preloadedResources[currentLang][namespacePart][actualKey];
+          return directValue;
+        }
+      }
+
+      // 支持三层结构：namespace.nested.key
+      if (keyParts.length === 3) {
+        const [namespacePart, nestedPart, actualKey] = keyParts;
+
+        // 尝试在解析出的命名空间和嵌套对象中查找
+        if (preloadedResources[currentLang] &&
+            preloadedResources[currentLang][namespacePart] &&
+            preloadedResources[currentLang][namespacePart][nestedPart] &&
+            Object.prototype.hasOwnProperty.call(preloadedResources[currentLang][namespacePart][nestedPart], actualKey)) {
+          const directValue = preloadedResources[currentLang][namespacePart][nestedPart][actualKey];
           return directValue;
         }
       }
@@ -126,32 +142,48 @@ export const useTranslation = (namespaces = 'common') => {
       
       // 1. 首先尝试直接从预加载资源中查找（绕过i18next问题）
       const currentLang = i18next && i18next.isInitialized ? i18next.language : 'en';
-      
+
       // 按优先级查找：先在指定命名空间，再在所有支持的命名空间
       const allNamespaces = [...keyNamespaces, 'common', 'app', 'welcome'];
       const uniqueNamespaces = [...new Set(allNamespaces)]; // 去重
-      
+
       // 首先尝试直接查找键名（支持app.title格式）
       for (const namespace of uniqueNamespaces) {
-        if (preloadedResources[currentLang] && 
-            preloadedResources[currentLang][namespace] && 
+        if (preloadedResources[currentLang] &&
+            preloadedResources[currentLang][namespace] &&
             Object.prototype.hasOwnProperty.call(preloadedResources[currentLang][namespace], key)) {
           const directValue = preloadedResources[currentLang][namespace][key];
           return directValue;
         }
       }
       
-      // 如果直接查找失败，尝试解析键名（支持app.title格式）
+      // 如果直接查找失败，尝试解析键名（支持app.title格式和嵌套键）
       if (key.includes('.')) {
         const keyParts = key.split('.');
+
+        // 支持两层结构：namespace.key
         if (keyParts.length === 2) {
           const [namespacePart, actualKey] = keyParts;
-          
+
           // 尝试在解析出的命名空间中查找
-          if (preloadedResources[currentLang] && 
-              preloadedResources[currentLang][namespacePart] && 
+          if (preloadedResources[currentLang] &&
+              preloadedResources[currentLang][namespacePart] &&
               Object.prototype.hasOwnProperty.call(preloadedResources[currentLang][namespacePart], actualKey)) {
             const directValue = preloadedResources[currentLang][namespacePart][actualKey];
+            return directValue;
+          }
+        }
+
+        // 支持三层结构：namespace.nested.key
+        if (keyParts.length === 3) {
+          const [namespacePart, nestedPart, actualKey] = keyParts;
+
+          // 尝试在解析出的命名空间和嵌套对象中查找
+          if (preloadedResources[currentLang] &&
+              preloadedResources[currentLang][namespacePart] &&
+              preloadedResources[currentLang][namespacePart][nestedPart] &&
+              Object.prototype.hasOwnProperty.call(preloadedResources[currentLang][namespacePart][nestedPart], actualKey)) {
+            const directValue = preloadedResources[currentLang][namespacePart][nestedPart][actualKey];
             return directValue;
           }
         }
