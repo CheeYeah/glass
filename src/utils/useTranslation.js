@@ -2,21 +2,94 @@ import { useCallback, useEffect, useState } from 'react';
 import i18next from './i18nextConfig';
 import { changeLanguage, getCurrentLanguage, i18nEventEmitter } from './i18nextConfig';
 
+// 从i18nextConfig导入预加载资源用于直接回退
+import { preloadedResources } from './i18nextConfig';
+
 // 通用翻译函数
 export const t = (key, options = {}) => {
   try {
-    // 检查i18next是否已初始化
-    if (i18next && i18next.isInitialized) {
-      const result = i18next.t(key, options);
-      // 确保返回的不是键名本身（表示翻译不存在）
-      return result !== key ? result : key;
-    } else {
-      // 如果未初始化，提供一个简单的回退
-      console.warn('i18next not initialized, using key as fallback:', key);
-      return key;
+    // 确保命名空间是数组格式
+    const ns = options.ns ? (Array.isArray(options.ns) ? options.ns : [options.ns]) : ['common'];
+    console.log(`Translating key '${key}' with namespace:`, ns);
+    
+    // 1. 首先尝试直接从预加载资源中查找（绕过i18next问题）
+    const currentLang = i18next && i18next.isInitialized ? i18next.language : 'en';
+    console.log(`Attempting direct lookup in preloadedResources[${currentLang}]`);
+    
+    // 按优先级查找：先在指定命名空间，再在所有支持的命名空间
+    const allNamespaces = [...ns, 'common', 'app', 'welcome'];
+    const uniqueNamespaces = [...new Set(allNamespaces)]; // 去重
+    
+    // 首先尝试直接查找键名（支持app.title格式）
+    for (const namespace of uniqueNamespaces) {
+      if (preloadedResources[currentLang] && 
+          preloadedResources[currentLang][namespace] && 
+          Object.prototype.hasOwnProperty.call(preloadedResources[currentLang][namespace], key)) {
+        const directValue = preloadedResources[currentLang][namespace][key];
+        console.log(`Found direct translation in ${namespace}:`, directValue);
+        return directValue;
+      }
     }
+    
+    // 如果直接查找失败，尝试解析键名（支持app.title格式）
+    if (key.includes('.')) {
+      const keyParts = key.split('.');
+      if (keyParts.length === 2) {
+        const [namespacePart, actualKey] = keyParts;
+        console.log(`Parsing key '${key}' as namespace '${namespacePart}' with key '${actualKey}'`);
+        
+        // 尝试在解析出的命名空间中查找
+        if (preloadedResources[currentLang] && 
+            preloadedResources[currentLang][namespacePart] && 
+            Object.prototype.hasOwnProperty.call(preloadedResources[currentLang][namespacePart], actualKey)) {
+          const directValue = preloadedResources[currentLang][namespacePart][actualKey];
+          console.log(`Found parsed translation in ${namespacePart}:`, directValue);
+          return directValue;
+        }
+      }
+    }
+    
+    // 2. 如果预加载资源中没找到，再尝试使用i18next（作为后备）
+    if (i18next && i18next.isInitialized) {
+      console.log(`Fallback to i18next for key '${key}'`);
+      const result = i18next.t(key, { ...options, ns });
+      if (result !== key) {
+        console.log(`i18next translation found:`, result);
+        return result;
+      }
+    }
+    
+    // 3. 如果所有方法都失败，记录详细错误并返回键名
+    console.error(
+      `CRITICAL: Translation not found anywhere for key '${key}' in languages:`, 
+      currentLang,
+      'and namespaces:', 
+      uniqueNamespaces
+    );
+    
+    // 作为最后的应急措施，检查一下是否预加载资源结构有问题
+    console.log('Available preloaded resource languages:', Object.keys(preloadedResources));
+    if (preloadedResources[currentLang]) {
+      console.log(`Namespaces available in ${currentLang}:`, Object.keys(preloadedResources[currentLang]));
+      // 如果是app.title键，特别检查一下
+      if (key === 'app.title') {
+        console.log('Specific check for app.title in en/app namespace:', 
+          preloadedResources['en'] && 
+          preloadedResources['en']['app'] && 
+          preloadedResources['en']['app']['title']);
+      }
+      // 如果是welcome.chooseConnection键，特别检查一下
+      if (key === 'welcome.chooseConnection') {
+        console.log('Specific check for welcome.chooseConnection in en/welcome namespace:', 
+          preloadedResources['en'] && 
+          preloadedResources['en']['welcome'] && 
+          preloadedResources['en']['welcome']['chooseConnection']);
+      }
+    }
+    
+    return key;
   } catch (error) {
-    console.warn(`Translation error for key '${key}':`, error);
+    console.error(`Translation error for key '${key}':`, error);
     return key; // 回退到显示键名
   }
 };
@@ -54,11 +127,77 @@ export const useTranslation = (namespaces = 'common') => {
 
   const t = useCallback((key, options = {}) => {
     try {
-      // 优先使用传入的命名空间，否则使用钩子的默认命名空间
-      const keyNamespaces = options.ns || nsArray;
-      return i18next.t(key, { ...options, ns: keyNamespaces });
+      // 确保keyNamespaces是数组格式
+      const keyNamespaces = options.ns ? 
+        (Array.isArray(options.ns) ? options.ns : [options.ns]) : 
+        nsArray;
+      
+      console.log(`React hook translating key '${key}' with namespace:`, keyNamespaces);
+      
+      // 1. 首先尝试直接从预加载资源中查找（绕过i18next问题）
+      const currentLang = i18next && i18next.isInitialized ? i18next.language : 'en';
+      console.log(`React hook attempting direct lookup in preloadedResources[${currentLang}]`);
+      
+      // 按优先级查找：先在指定命名空间，再在所有支持的命名空间
+      const allNamespaces = [...keyNamespaces, 'common', 'app', 'welcome'];
+      const uniqueNamespaces = [...new Set(allNamespaces)]; // 去重
+      
+      // 首先尝试直接查找键名（支持app.title格式）
+      for (const namespace of uniqueNamespaces) {
+        if (preloadedResources[currentLang] && 
+            preloadedResources[currentLang][namespace] && 
+            Object.prototype.hasOwnProperty.call(preloadedResources[currentLang][namespace], key)) {
+          const directValue = preloadedResources[currentLang][namespace][key];
+          console.log(`React hook found direct translation in ${namespace}:`, directValue);
+          return directValue;
+        }
+      }
+      
+      // 如果直接查找失败，尝试解析键名（支持app.title格式）
+      if (key.includes('.')) {
+        const keyParts = key.split('.');
+        if (keyParts.length === 2) {
+          const [namespacePart, actualKey] = keyParts;
+          console.log(`React hook parsing key '${key}' as namespace '${namespacePart}' with key '${actualKey}'`);
+          
+          // 尝试在解析出的命名空间中查找
+          if (preloadedResources[currentLang] && 
+              preloadedResources[currentLang][namespacePart] && 
+              Object.prototype.hasOwnProperty.call(preloadedResources[currentLang][namespacePart], actualKey)) {
+            const directValue = preloadedResources[currentLang][namespacePart][actualKey];
+            console.log(`React hook found parsed translation in ${namespacePart}:`, directValue);
+            return directValue;
+          }
+        }
+      }
+      
+      // 2. 如果预加载资源中没找到，再尝试使用i18next（作为后备）
+      if (i18next && i18next.isInitialized) {
+        console.log(`Fallback to i18next for key '${key}'`);
+        const result = i18next.t(key, { ...options, ns: keyNamespaces });
+        if (result !== key) {
+          console.log(`i18next translation found:`, result);
+          return result;
+        }
+      }
+      
+      // 3. 如果所有方法都失败，记录详细错误并返回键名
+      console.error(
+        `CRITICAL: Translation not found anywhere for key '${key}' in languages:`, 
+        currentLang,
+        'and namespaces:', 
+        uniqueNamespaces
+      );
+      
+      // 作为最后的应急措施，检查一下是否预加载资源结构有问题
+      console.log('Available preloaded resource languages:', Object.keys(preloadedResources));
+      if (preloadedResources[currentLang]) {
+        console.log(`Namespaces available in ${currentLang}:`, Object.keys(preloadedResources[currentLang]));
+      }
+      
+      return key;
     } catch (error) {
-      console.warn(`Translation error for key '${key}':`, error);
+      console.error(`React hook translation error for key '${key}':`, error);
       return key;
     }
   }, [nsArray]);
