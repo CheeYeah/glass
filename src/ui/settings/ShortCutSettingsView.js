@@ -1,6 +1,6 @@
 import { html, css, LitElement } from '../../ui/assets/lit-core-2.7.4.min.js';
-import { t } from '../../utils/useTranslation.js';
-import { i18nLitMixin } from '../../utils/i18nLitMixin.js';
+import { t } from '../../utils/i18n/useTranslation.js';
+import { i18nLitMixin } from '../../utils/i18n/i18nLitMixin.js';
 
 const commonSystemShortcuts = new Set([
     'Cmd+Q', 'Cmd+W', 'Cmd+A', 'Cmd+S', 'Cmd+Z', 'Cmd+X', 'Cmd+C', 'Cmd+V', 'Cmd+P', 'Cmd+F', 'Cmd+G', 'Cmd+H', 'Cmd+M', 'Cmd+N', 'Cmd+O', 'Cmd+T',

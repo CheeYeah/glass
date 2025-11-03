@@ -1,6 +1,6 @@
 import { html } from '../assets/lit-core-2.7.4.min.js';
-import { t } from '../../utils/useTranslation.js';
-import { initI18next } from '../../utils/i18nextConfig.js';
+import { t } from '../../utils/i18n/useTranslation.js';
+import { initI18next } from '../../utils/i18n/i18nextConfig.js';
 
 // 确保i18next在模板加载时已经初始化
 initI18next().catch(error => {

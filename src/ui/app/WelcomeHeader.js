@@ -1,6 +1,6 @@
 import { LitElement } from '../assets/lit-core-2.7.4.min.js';
-import { i18nLitMixin } from '../../utils/i18nLitMixin.js';
-import { initI18next, i18nEventEmitter } from '../../utils/i18nextConfig.js';
+import { i18nLitMixin } from '../../utils/i18n/i18nLitMixin.js';
+import { initI18next, i18nEventEmitter } from '../../utils/i18n/i18nextConfig.js';
 import { welcomeHeaderTemplate } from './WelcomeHeader.template.js';
 import { css } from '../assets/lit-core-2.7.4.min.js';
 

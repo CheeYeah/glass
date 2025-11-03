@@ -1,6 +1,6 @@
 import { LitElement } from '../assets/lit-core-2.7.4.min.js';
-import { t, changeLanguage } from '../../utils/useTranslation.js';
-import { i18nLitMixin } from '../../utils/i18nLitMixin.js';
+import { t, changeLanguage } from '../../utils/i18n/useTranslation.js';
+import { i18nLitMixin } from '../../utils/i18n/i18nLitMixin.js';
 import { getSettingsTemplate } from './SettingsView.template.js';
 import './SettingsView.css';
 

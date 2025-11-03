@@ -33,7 +33,7 @@ const initI18next = async () => {
   
   // 同步加载语言资源的函数
   const loadResourcesSync = (language, namespace) => {
-    const resourcePath = path.join(__dirname, `../locales/${language}/${namespace}.json`);
+    const resourcePath = path.join(__dirname, `../../locales/${language}/${namespace}.json`);
     try {
       if (fs.existsSync(resourcePath)) {
         const content = fs.readFileSync(resourcePath, 'utf8');
@@ -41,7 +41,7 @@ const initI18next = async () => {
       }
       // 尝试加载默认命名空间作为回退
       if (namespace !== 'common') {
-        const commonPath = path.join(__dirname, `../locales/${language}/common.json`);
+        const commonPath = path.join(__dirname, `../../locales/${language}/common.json`);
         if (fs.existsSync(commonPath)) {
           const content = fs.readFileSync(commonPath, 'utf8');
           return JSON.parse(content);

@@ -1,7 +1,7 @@
 import { html, css, LitElement } from '../../ui/assets/lit-core-2.7.4.min.js';
 import { parser, parser_write, parser_end, default_renderer } from '../../ui/assets/smd.js';
-import { t } from '../../utils/useTranslation.js';
-import { i18nLitMixin } from '../../utils/i18nLitMixin.js';
+import { t } from '../../utils/i18n/useTranslation.js';
+import { i18nLitMixin } from '../../utils/i18n/i18nLitMixin.js';
 
 export class AskView extends i18nLitMixin(LitElement) {
     static properties = {

@@ -1,5 +1,5 @@
 import { html, css, LitElement } from '../assets/lit-core-2.7.4.min.js';
-// // // // import { t } from '../../utils/useTranslation.js';
+// // // // import { t } from '../../utils/i18n/useTranslation.js';
 
 export class MainHeader extends LitElement {
     static properties = {

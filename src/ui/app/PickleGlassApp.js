@@ -3,8 +3,8 @@ import { SettingsView } from '../settings/SettingsView.js';
 import { ListenView } from '../listen/ListenView.js';
 import { AskView } from '../ask/AskView.js';
 import { ShortcutSettingsView } from '../settings/ShortCutSettingsView.js';
-import { t } from '../../utils/useTranslation.js';
-import { i18nLitMixin } from '../../utils/i18nLitMixin.js';
+import { t } from '../../utils/i18n/useTranslation.js';
+import { i18nLitMixin } from '../../utils/i18n/i18nLitMixin.js';
 
 import '../listen/audioCore/renderer.js';
 

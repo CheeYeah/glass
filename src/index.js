@@ -206,8 +206,8 @@ app.whenReady().then(async () => {
     await ollamaModelRepository.initializeDefaultModels();
 
     // Initialize i18n
-    const { initializeI18n } = require('./utils/initI18n');
-    const { i18nEventEmitter } = require('./utils/i18nextConfigMain');
+    const { initializeI18n } = require('./utils/i18n/initI18n');
+     const { i18nEventEmitter } = require('./utils/i18n/i18nextConfigMain');
     
     try {
       await initializeI18n();
