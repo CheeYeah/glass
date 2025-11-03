@@ -4,18 +4,8 @@ import resourcesToBackend from 'i18next-resources-to-backend';
 
 // 预加载关键翻译资源作为备用
 export const preloadedResources = {
-  en: {
-    app: require('../../locales/en/app.json'),
-    welcome: require('../../locales/en/welcome.json'),
-    common: require('../../locales/en/common.json'),
-    apiKey: require('../../locales/en/apiKey.json')
-  },
-  'zh-CN': {
-    app: require('../../locales/zh-CN/app.json'),
-    welcome: require('../../locales/zh-CN/welcome.json'),
-    common: require('../../locales/zh-CN/common.json'),
-    apiKey: require('../../locales/zh-CN/apiKey.json')
-  }
+  en:  require('../../locales/en-US.json'),
+  'zh-CN': require('../../locales/zh-CN.json')
 };
 
 // 详细检查预加载资源内容
@@ -75,7 +65,8 @@ const supportedNamespaces = [
   'summary',
   'welcome',
   'permission',
-  'apiKey'
+  'apiKey',
+  'shortcuts'
 ];
 
 // 确保initI18next可以从其他组件导入使用

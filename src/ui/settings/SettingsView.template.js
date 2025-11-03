@@ -241,8 +241,8 @@ export function getSettingsTemplate(component) {
                 <div class="language-selector-section">
                     <label class="settings-label">${t('settings.language')}</label>
                     <select class="language-select" @change="${component.handleLanguageChange}">
-                        <option value="en">${t('languages.english')}</option>
-                        <option value="zh-CN">${t('languages.chinese')}</option>
+                        <option value="en">${t('settings.languages.english')}</option>
+                        <option value="zh-CN">${t('settings.languages.chinese')}</option>
                     </select>
                 </div>
                 

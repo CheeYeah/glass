@@ -207,7 +207,7 @@ export class ShortcutSettingsView extends i18nLitMixin(LitElement) {
 
     render(){
         if(this.isLoading){
-          return html`<div class="container"><div class="loading-state">${t('shortcuts.loading')}</div></div>`;
+          return html`<div class="container"><div class="loading-state">${t('common.loading')}</div></div>`;
         }
         return html`
           <div class="container">

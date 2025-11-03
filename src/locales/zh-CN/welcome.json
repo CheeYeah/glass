@@ -1,9 +1,0 @@
-{
-  "chooseConnection": "选择如何连接您的AI模型",
-  "quickStart": "使用默认API密钥快速开始",
-  "quickStartDescription": "使用Pickle的OpenAI密钥100%免费<br/>不收集个人数据<br/>几秒钟内使用Google注册",
-  "openBrowserLogin": "打开浏览器登录",
-  "personalApiKeys": "使用个人API密钥",
-  "personalApiKeysDescription": "根据您的API使用情况可能产生费用<br/>不收集个人数据<br/>使用您自己的API密钥（OpenAI、Gemini等）",
-  "enterApiKey": "输入您的API密钥"
-}
