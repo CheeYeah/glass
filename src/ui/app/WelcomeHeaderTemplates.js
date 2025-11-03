@@ -19,7 +19,7 @@ export const welcomeHeaderTemplate = (host) => html`
             <div class="option-content">
                 <div class="option-title">${t('welcome.quickStart', { ns: 'welcome' })}</div>
                 <div class="option-description">
-                    ${t('welcome.quickStartDescription', { ns: 'welcome' })}
+                    ${t('welcome.quickStartDescription', { ns: 'welcome' }).split('<br/>').map(line => html`<div>${line}</div>`)}
                 </div>
             </div>
             <button class="action-button" @click=${host.loginCallback}>
@@ -32,7 +32,7 @@ export const welcomeHeaderTemplate = (host) => html`
             <div class="option-content">
                 <div class="option-title">${t('welcome.personalApiKeys', { ns: 'welcome' })}</div>
                 <div class="option-description">
-                    ${t('welcome.personalApiKeysDescription', { ns: 'welcome' })}
+                    ${t('welcome.personalApiKeysDescription', { ns: 'welcome' }).split('<br/>').map(line => html`<div>${line}</div>`)}
                 </div>
             </div>
             <button class="action-button" @click=${host.apiKeyCallback}>
@@ -41,8 +41,8 @@ export const welcomeHeaderTemplate = (host) => html`
             </button>
         </div>
         <div class="footer">
-            ${t('welcome.privacyNotice', { ns: 'welcome' })}
-            <span class="footer-link" @click=${host.openPrivacyPolicy}>${t('welcome.seeDetails', { ns: 'welcome' })}</span>
+            ${t('common.privacyNotice', { ns: 'common' })}
+            <span class="footer-link" @click=${host.openPrivacyPolicy}>${t('common.seeDetails', { ns: 'common' })}</span>
         </div>
     </div>
 `;

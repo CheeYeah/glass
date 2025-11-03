@@ -7,12 +7,14 @@ export const preloadedResources = {
   en: {
     app: require('../locales/en/app.json'),
     welcome: require('../locales/en/welcome.json'),
-    common: require('../locales/en/common.json')
+    common: require('../locales/en/common.json'),
+    apiKey: require('../locales/en/apiKey.json')
   },
   'zh-CN': {
     app: require('../locales/zh-CN/app.json'),
     welcome: require('../locales/zh-CN/welcome.json'),
-    common: require('../locales/zh-CN/common.json')
+    common: require('../locales/zh-CN/common.json'),
+    apiKey: require('../locales/zh-CN/apiKey.json')
   }
 };
 

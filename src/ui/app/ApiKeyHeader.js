@@ -144,7 +144,7 @@ export class ApiKeyHeader extends i18nLitMixin(LitElement) {
         }
         .provider-selector {
             display: flex;
-            width: 240px;
+            width: 384px;
             overflow: hidden;
             border-radius: 12px;
             border: 0.5px solid rgba(255, 255, 255, 0.5);
@@ -171,7 +171,7 @@ export class ApiKeyHeader extends i18nLitMixin(LitElement) {
         }
         .api-input {
             -webkit-app-region: no-drag;
-            width: 240px;
+            width: 384px;
             padding: 10px 8px;
             background: rgba(61.2, 61.2, 61.2, 0.8);
             border-radius: 6px;
@@ -184,7 +184,7 @@ export class ApiKeyHeader extends i18nLitMixin(LitElement) {
         }
         .ollama-action-button {
             -webkit-app-region: no-drag;
-            width: 240px;
+            width: 384px;
             padding: 10px 8px;
             border-radius: 16px;
             border: none;
@@ -225,7 +225,7 @@ export class ApiKeyHeader extends i18nLitMixin(LitElement) {
         }
         .confirm-button {
             -webkit-app-region: no-drag;
-            width: 240px;
+            width: 384px;
             padding: 8px;
             background: rgba(132.6, 132.6, 132.6, 0.8);
             box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.16);
@@ -321,7 +321,7 @@ export class ApiKeyHeader extends i18nLitMixin(LitElement) {
             font-weight: 400;
             letter-spacing: 0.11px;
             word-wrap: break-word;
-            width: 240px;
+            width: 384px;
         }
     `;
 
@@ -2064,15 +2064,15 @@ export class ApiKeyHeader extends i18nLitMixin(LitElement) {
                               ? t('apiKey.installingModel', { model: this.installingModel })
                               : Object.keys(this.whisperInstallingModels).length > 0
                                 ? t('apiKey.downloading')
-                                : t('apiKey.confirm')}
+                                : t('common.confirm', { ns: 'common' })}
                     </button>
                 </div>
 
                 <div class="footer">
                     ${t('apiKey.getApiKeyFrom')}
                     <br />
-                    ${t('apiKey.privacyNotice')}
-                    <span class="footer-link" @click=${this.openPrivacyPolicy}>${t('apiKey.seeDetails')}</span>
+                    ${t('common.privacyNotice')}
+                    <span class="footer-link" @click=${this.openPrivacyPolicy}>${t('common.seeDetails')}</span>
                 </div>
 
                 <div class="error-message ${this.shouldFadeMessage('error') ? 'message-fade-out' : ''}" @animationend=${this.handleMessageFadeEnd}>

@@ -234,8 +234,8 @@ class HeaderTransitionManager {
 
     async _resizeForApiKey(height = 370) {
         if (!window.api) return;
-        console.log(`[HeaderController] _resizeForApiKey: Resizing window to 456x${height}`);
-        return window.api.headerController.resizeHeaderWindow({ width: 456, height: height }).catch(() => {});
+        console.log(`[HeaderController] _resizeForApiKey: Resizing window to 600x${height}`);
+        return window.api.headerController.resizeHeaderWindow({ width: 600, height: height }).catch(() => {});
     }
 
     async _resizeForPermissionHeader(height) {
@@ -247,8 +247,8 @@ class HeaderTransitionManager {
 
     async _resizeForWelcome() {
         if (!window.api) return;
-        console.log('[HeaderController] _resizeForWelcome: Resizing window to 456x370');
-        return window.api.headerController.resizeHeaderWindow({ width: 456, height: 364 })
+        console.log('[HeaderController] _resizeForWelcome: Resizing window to 600x370');
+        return window.api.headerController.resizeHeaderWindow({ width: 600, height: 364 })
             .catch(() => {});
     }
 
