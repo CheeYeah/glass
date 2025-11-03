@@ -87,7 +87,8 @@ npm start
 # 下载地址: https://github.com/coreybutler/nvm-windows/releases
 
 # macOS/Linux 安装 nvm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+# 安装nvm for Windows
+# 从 https://github.com/coreybutler/nvm-windows/releases 下载安装包
 
 # 安装并使用 Node.js 20
 nvm install 20

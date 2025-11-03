@@ -39,22 +39,22 @@ class WhisperService extends EventEmitter {
             'whisper-tiny': {
                 name: 'Tiny',
                 size: '39M',
-                url: 'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin'
+                url: 'https://hf-mirror.com/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin'
             },
             'whisper-base': {
                 name: 'Base',
                 size: '74M',
-                url: 'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin'
+                url: 'https://hf-mirror.com/ggerganov/whisper.cpp/resolve/main/ggml-base.bin'
             },
             'whisper-small': {
                 name: 'Small',
                 size: '244M',
-                url: 'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.bin'
+                url: 'https://hf-mirror.com/ggerganov/whisper.cpp/resolve/main/ggml-small.bin'
             },
             'whisper-medium': {
                 name: 'Medium',
                 size: '769M',
-                url: 'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-medium.bin'
+                url: 'https://hf-mirror.com/ggerganov/whisper.cpp/resolve/main/ggml-medium.bin'
             }
         };
     }
