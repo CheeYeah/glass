@@ -207,7 +207,7 @@ app.whenReady().then(async () => {
 
     // Initialize i18n
     const { initializeI18n } = require('./utils/initI18n');
-    const { i18nEventEmitter } = require('./utils/i18nextConfig');
+    const { i18nEventEmitter } = require('./utils/i18nextConfigMain');
     
     try {
       await initializeI18n();

@@ -1,5 +1,5 @@
-// i18n初始化入口文件
-import { initI18next, i18nEventEmitter } from './i18nextConfig';
+// i18n初始化入口文件 - 主进程专用
+const { initI18next, i18nEventEmitter } = require('./i18nextConfigMain');
 
 // 全局i18n初始化状态
 let i18nInitialized = false;
@@ -9,7 +9,7 @@ let i18nInitPromise = null;
  * 初始化i18n系统
  * @returns {Promise} i18next实例
  */
-export const initializeI18n = async () => {
+const initializeI18n = async () => {
   // 如果已经初始化或正在初始化，直接返回Promise
   if (i18nInitPromise) {
     return i18nInitPromise;
@@ -40,14 +40,14 @@ export const initializeI18n = async () => {
  * 检查i18n是否已初始化
  * @returns {boolean} 是否已初始化
  */
-export const isI18nInitialized = () => {
+const isI18nInitialized = () => {
   return i18nInitialized;
 };
 
 /**
  * 预加载i18n系统（异步，不阻塞其他操作）
  */
-export const preloadI18n = () => {
+const preloadI18n = () => {
   if (!i18nInitPromise) {
     i18nInitPromise = initializeI18n().catch(error => {
       console.error('i18n preload failed:', error);
@@ -56,5 +56,9 @@ export const preloadI18n = () => {
   }
 };
 
-// 默认导出
-export default initializeI18n;
+// 导出为CommonJS模块
+module.exports = {
+  initializeI18n,
+  isI18nInitialized,
+  preloadI18n
+};

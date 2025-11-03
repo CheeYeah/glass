@@ -3,14 +3,17 @@ const path = require('path');
 
 const baseConfig = {
     bundle: true,
-    platform: 'browser',
+    platform: 'neutral', // 修改为neutral平台以支持Node.js模块
     format: 'esm',
     loader: { '.js': 'jsx' },
     sourcemap: true,
-    external: ['electron'],
+    external: ['electron', ...Object.keys(process.binding('natives'))], // 排除所有Node.js内置模块
     define: {
         'process.env.NODE_ENV': `"${process.env.NODE_ENV || 'development'}"`,
     },
+    // 允许导入相对路径的模块
+    resolveExtensions: ['.js', '.mjs', '.jsx'],
+    logLevel: 'info',
 };
 
 const entryPoints = [

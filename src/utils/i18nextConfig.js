@@ -1,14 +1,41 @@
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import resourcesToBackend from 'i18next-resources-to-backend';
-import Store from 'electron-store';
-import { EventEmitter } from 'events';
 
-const store = new Store();
+// 自定义事件发射器，不依赖Node.js的EventEmitter
+class CustomEventEmitter {
+  constructor() {
+    this.listeners = {};
+  }
 
-// 创建事件发射器用于语言变化通知
-export const i18nEventEmitter = new EventEmitter();
-i18nEventEmitter.setMaxListeners(100); // 增加监听器上限以避免警告
+  on(event, listener) {
+    if (!this.listeners[event]) {
+      this.listeners[event] = [];
+    }
+    this.listeners[event].push(listener);
+    return this;
+  }
+
+  emit(event, ...args) {
+    const eventListeners = this.listeners[event] || [];
+    eventListeners.forEach(listener => listener(...args));
+    return eventListeners.length > 0;
+  }
+
+  removeListener(event, listener) {
+    if (!this.listeners[event]) return this;
+    this.listeners[event] = this.listeners[event].filter(l => l !== listener);
+    return this;
+  }
+
+  setMaxListeners(max) {
+    // 模拟方法，实际上在我们的实现中不需要
+    return this;
+  }
+}
+
+// 创建自定义事件发射器用于语言变化通知
+export const i18nEventEmitter = new CustomEventEmitter();
 
 // 定义所有支持的命名空间
 const supportedNamespaces = [
@@ -26,8 +53,8 @@ const supportedNamespaces = [
 ];
 
 export const initI18next = async () => {
-  // 从存储中获取保存的语言设置
-  const savedLanguage = store.get('appLanguage');
+  // 从localStorage中获取保存的语言设置
+  const savedLanguage = localStorage.getItem('appLanguage');
   
   await i18next
     .use(LanguageDetector)
@@ -75,7 +102,7 @@ export const initI18next = async () => {
 
 export const changeLanguage = async (language) => {
   await i18next.changeLanguage(language);
-  store.set('appLanguage', language);
+  localStorage.setItem('appLanguage', language);
   
   // 发射语言变化事件
   i18nEventEmitter.emit('languageChanged', language);
