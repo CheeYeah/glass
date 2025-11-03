@@ -52,52 +52,73 @@ const supportedNamespaces = [
   'apiKey'
 ];
 
+// 确保initI18next可以从其他组件导入使用
 export const initI18next = async () => {
-  // 从localStorage中获取保存的语言设置
-  const savedLanguage = localStorage.getItem('appLanguage');
+  // 检查i18next是否已经初始化
+  if (i18next.isInitialized) {
+    console.log('i18next already initialized with language:', i18next.language);
+    return i18next;
+  }
   
-  await i18next
-    .use(LanguageDetector)
-    .use(resourcesToBackend((language, namespace, callback) => {
-      // 动态导入语言资源文件
-      import(`../locales/${language}/${namespace}.json`)
-        .then(res => {
-          callback(null, res.default);
-        })
-        .catch(err => {
-          console.warn(`Failed to load namespace ${namespace} for language ${language}:`, err);
-          // 尝试加载默认命名空间作为回退
-          if (namespace !== 'common') {
-            import(`../locales/${language}/common.json`)
-              .then(res => callback(null, res.default))
-              .catch(() => callback(null, {}));
-          } else {
-            callback(null, {});
-          }
-        });
-    }))
-    .init({
-      lng: savedLanguage || 'en',
-      fallbackLng: 'en',
-      supportedLngs: ['en', 'zh-CN'],
-      ns: supportedNamespaces,
-      defaultNS: 'common',
-      fallbackNS: ['common'],
-      interpolation: {
-        escapeValue: false,
-      },
-      detection: {
-        // 自定义语言检测选项
-        order: ['navigator', 'localStorage'],
-        lookupLocalStorage: 'i18nextLng',
-        caches: ['localStorage'],
-      },
-      debug: process.env.NODE_ENV === 'development',
-      // 预加载所有命名空间
-      preload: ['en', 'zh-CN']
-    });
-  
-  return i18next;
+  try {
+    // 从localStorage中获取保存的语言设置
+    const savedLanguage = localStorage.getItem('appLanguage');
+    
+    await i18next
+      .use(LanguageDetector)
+      .use(resourcesToBackend((language, namespace, callback) => {
+        // 动态导入语言资源文件
+        import(`../locales/${language}/${namespace}.json`)
+          .then(res => {
+            callback(null, res.default || {});
+          })
+          .catch(err => {
+            console.warn(`Failed to load namespace ${namespace} for language ${language}:`, err);
+            // 尝试加载默认命名空间作为回退
+            if (namespace !== 'common') {
+              import(`../locales/${language}/common.json`)
+                .then(res => callback(null, res.default || {}))
+                .catch(() => callback(null, {}));
+            } else {
+              callback(null, {});
+            }
+          });
+      }))
+      .init({
+        lng: savedLanguage || 'en',
+        fallbackLng: 'en',
+        supportedLngs: ['en', 'zh-CN'],
+        ns: supportedNamespaces,
+        defaultNS: 'common',
+        fallbackNS: ['common'],
+        interpolation: {
+          escapeValue: false,
+        },
+        detection: {
+          // 自定义语言检测选项
+          order: ['localStorage', 'navigator'],
+          lookupLocalStorage: 'i18nextLng',
+          caches: ['localStorage'],
+        },
+        // 确保所有需要的命名空间都被加载
+        load: 'currentOnly',
+        // 更宽松的回退策略
+        nonExplicitWhitelist: true,
+        debug: process.env.NODE_ENV === 'development',
+        // 立即执行初始化，不延迟
+        initImmediate: true
+      });
+    
+    console.log('i18next initialized successfully with language:', i18next.language);
+    return i18next;
+  } catch (error) {
+    console.error('Error initializing i18next:', error);
+    // 创建一个简单的后备翻译函数
+    if (!window.t) {
+      window.t = (key) => key;
+    }
+    throw error;
+  }
 };
 
 export const changeLanguage = async (language) => {

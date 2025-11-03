@@ -24,6 +24,10 @@ contextBridge.exposeInMainWorld('api', {
     // User state listener (used by multiple components)
       onUserStateChanged: (callback) => ipcRenderer.on('user-state-changed', callback),
       removeOnUserStateChanged: (callback) => ipcRenderer.removeListener('user-state-changed', callback),
+    
+    // i18n language change listeners
+    onLanguageChanged: (callback) => ipcRenderer.on('language-changed', callback),
+    removeOnLanguageChanged: (callback) => ipcRenderer.removeListener('language-changed', callback)
   },
 
   // UI Component specific namespaces

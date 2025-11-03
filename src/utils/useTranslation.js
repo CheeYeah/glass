@@ -5,7 +5,16 @@ import { changeLanguage, getCurrentLanguage, i18nEventEmitter } from './i18nextC
 // 通用翻译函数
 export const t = (key, options = {}) => {
   try {
-    return i18next.t(key, options);
+    // 检查i18next是否已初始化
+    if (i18next && i18next.isInitialized) {
+      const result = i18next.t(key, options);
+      // 确保返回的不是键名本身（表示翻译不存在）
+      return result !== key ? result : key;
+    } else {
+      // 如果未初始化，提供一个简单的回退
+      console.warn('i18next not initialized, using key as fallback:', key);
+      return key;
+    }
   } catch (error) {
     console.warn(`Translation error for key '${key}':`, error);
     return key; // 回退到显示键名

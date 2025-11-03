@@ -1,6 +1,7 @@
 import { html, css, LitElement } from '../assets/lit-core-2.7.4.min.js';
 import { t } from '../../utils/useTranslation.js';
 import { i18nLitMixin } from '../../utils/i18nLitMixin.js';
+import { initI18next } from '../../utils/i18nextConfig.js';
 
 export class WelcomeHeader extends i18nLitMixin(LitElement) {
     static styles = css`
@@ -172,6 +173,43 @@ export class WelcomeHeader extends i18nLitMixin(LitElement) {
         this.loginCallback = () => {};
         this.apiKeyCallback = () => {};
         this.handleClose = this.handleClose.bind(this);
+        
+        // 确保i18n初始化
+        this.initializeI18n();
+    }
+    
+    async initializeI18n() {
+        try {
+            await initI18next();
+            console.log('i18n initialized in WelcomeHeader');
+            // 初始化后请求更新组件
+            this.requestUpdate();
+        } catch (error) {
+            console.error('Failed to initialize i18n in WelcomeHeader:', error);
+        }
+    }
+    
+    connectedCallback() {
+        super.connectedCallback();
+        
+        // 额外监听来自主进程的语言变化事件
+        if (window.api?.common?.onLanguageChanged) {
+            this._mainProcessLanguageChangeListener = () => {
+                console.log('Language changed event received from main process');
+                this.requestUpdate();
+            };
+            window.api.common.onLanguageChanged(this._mainProcessLanguageChangeListener);
+        }
+    }
+    
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        
+        // 清理主进程语言变化事件监听
+        if (window.api?.common?.removeOnLanguageChanged && this._mainProcessLanguageChangeListener) {
+            window.api.common.removeOnLanguageChanged(this._mainProcessLanguageChangeListener);
+            this._mainProcessLanguageChangeListener = null;
+        }
     }
 
     updated(changedProperties) {
